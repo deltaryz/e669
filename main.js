@@ -26,7 +26,7 @@ function getSearchQuery() {
   } else {
     // URL to request results from
     var requestURL =
-      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=40&page=" +
+      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=20&page=" +
       currentPage +
       "&tags=" +
       tags; // TODO: replace this with own service

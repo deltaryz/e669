@@ -26,10 +26,10 @@ function getSearchQuery() {
   } else {
     // URL to request results from
     var requestURL =
-      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=20&page=" +
+      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=20&page=" + // TODO: replace this service with own service
       currentPage +
       "&tags=" +
-      tags; // TODO: replace this with own service
+      tags;
 
     // create request
     verboseLog("creating request to " + requestURL);
@@ -51,8 +51,9 @@ function getSearchQuery() {
   function appendResultsToPage(resultsArray) {
     // padding and functionality variables
 
-    div.innerHTML = "Results:<br />"; // clean up any existing results TODO: make this its own function
+    div.innerHTML = "Results:<br />"; // clean up any existing results
     resultsArray.forEach(function(result, resultIndex) {
+      // convenience variables
       const fileUrl = result["file_url"];
       const fileName = result["artist"] + " - " + result["md5"];
       const fileType = result["file_ext"];
@@ -61,6 +62,7 @@ function getSearchQuery() {
 
       // check if file is an SWF or WEBM
       if (fileType === "webm") {
+        // add red outline to indicate that this is a webm
         div.innerHTML +=
           '<a href="' +
           fileUrl +
@@ -70,6 +72,7 @@ function getSearchQuery() {
           result["tags"] +
           '">    </a>';
       } else if (fileType === "swf") {
+        // use swf-icon.png to indicate that this is an swf
         div.innerHTML +=
           '<a href="' +
           fileUrl +
@@ -77,6 +80,7 @@ function getSearchQuery() {
           result["tags"] +
           '">    </a>';
       } else {
+        // this is an image
         div.innerHTML +=
           '<a href="' +
           fileUrl +
@@ -112,13 +116,6 @@ function pagePrevious() {
   getSearchQuery();
 }
 
-document.getElementById("tags").addEventListener("keyup", function(event) {
-  event.preventDefault();
-  if (event.keyCode === 13) {
-    getSearchQuery();
-  }
-});
-
 // update the displayed page number
 function updatePageNumber() {
   pageNumberElement = document.getElementById("pageNumber").innerText =
@@ -129,3 +126,11 @@ function updatePageNumber() {
 function verboseLog(text) {
   if (verboseOutput) console.log(text);
 }
+
+// enable enter key functionality on search box
+document.getElementById("tags").addEventListener("keyup", function(event) {
+  event.preventDefault();
+  if (event.keyCode === 13) {
+    getSearchQuery();
+  }
+});

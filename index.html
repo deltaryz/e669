@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>e669</title>
+  </head>
+  <body>
+    <button onclick="getSearchQuery()">Test Query</button>
+    <div id="results">Results:<br /></div>
+
+    <script>
+      var verboseOutput = true;
+
+      function getSearchQuery() {
+        // URL to request results from
+        var requestURL =
+          "https://cors.io/?https://e621.net/post/index.json?limit=10"; // TODO: replace this with own service
+
+        // create request
+        verboseLog("creating request");
+        var request = new XMLHttpRequest();
+        request.open("GET", requestURL);
+        request.responseType = "json";
+        request.send();
+
+        // once request loads
+        request.onload = function() {
+          verboseLog("Request has loaded");
+          var results = request.response;
+          appendResultsToPage("results", results); // Add results to page
+        };
+      }
+
+      // add all results to page
+      function appendResultsToPage(divId, resultsArray) {
+        var div = document.getElementById(divId); // div on page to append results
+        div.innerHTML = "Results:<br />"; // clean up any existing results TODO: make this its own function
+        resultsArray.forEach(function(result, resultIndex) {
+          div.innerHTML +=
+            resultIndex +
+            ': <img src="' +
+            result["file_url"] +
+            '" alt="' +
+            result["tags"] +
+            '"></img>';
+        });
+      }
+
+      /*
+// GENERAL HELPER FUNCTIONS
+*/
+
+      // Print to console only if verbose output is enabled
+      function verboseLog(text) {
+        if (verboseOutput) console.log(text);
+      }
+    </script>
+  </body>
+</html>

@@ -75,7 +75,7 @@ function getSearchQuery() {
       const fileName = result["artist"] + " - " + result["md5"];
       const fileType = result["file_ext"];
       const fileTags = result["tags"];
-      const authorName = result["artist"];
+      const artistName = result["artist"];
       const pageUrl = "https://e621.net/post/show/" + result["id"];
 
       verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
@@ -92,7 +92,9 @@ function getSearchQuery() {
         var link = document.createElement("a");
         link.href = fileUrl;
         var image = document.createElement("img");
-        image.classList.add("grid-item");
+        image.classList.add("grid-item", "tooltipped");
+        image.setAttribute("data-position", "bottom");
+        image.setAttribute("data-tooltip", artistName);
         image.title = fileTags;
         image.src = fileUrl;
         link.appendChild(image);
@@ -102,6 +104,9 @@ function getSearchQuery() {
           .masonry("appended", link)
           .imagesLoaded()
           .progress(function() {
+            $(document).ready(function() {
+              $(".tooltipped").tooltip();
+            });
             $(".grid").masonry();
           });
       }

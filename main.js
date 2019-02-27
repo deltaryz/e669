@@ -74,6 +74,7 @@ function getSearchQuery() {
       const fileUrl = result["file_url"];
       const fileName = result["artist"] + " - " + result["md5"];
       const fileType = result["file_ext"];
+      const fileTags = result["tags"];
       const authorName = result["artist"];
       const pageUrl = "https://e621.net/post/show/" + result["id"];
 
@@ -92,6 +93,7 @@ function getSearchQuery() {
         link.href = fileUrl;
         var image = document.createElement("img");
         image.classList.add("grid-item");
+        image.title = fileTags;
         image.src = fileUrl;
         link.appendChild(image);
 
@@ -110,29 +112,6 @@ function getSearchQuery() {
 /*
 // GENERAL HELPER FUNCTIONS
 */
-
-// create HTML code for a card object
-function createCard(imageUrl, authorName, pageUrl) {
-  var htmlText =
-    "" +
-    '<div class="grid-item" style="float: left;">' +
-    '<div class="card" >' +
-    '<div class="card-image waves-effect waves-block waves-light">' +
-    "<img class='activator' src='" +
-    imageUrl +
-    "'>" +
-    "</div>" +
-    "<div class='card-content'>" +
-    "<span class='card-title activator grey-text text-darken-4'>" +
-    authorName +
-    '<i class="material-icons right">more_vert</i></span>' +
-    '<p><a href="' +
-    pageUrl +
-    '">Page</a></p>' +
-    "</div></div></div>";
-
-  return htmlText;
-}
 
 // advance to next page and automatically reload results
 function pageNext() {

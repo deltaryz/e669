@@ -5,12 +5,17 @@
     <title>e669</title>
     <style>
       img {
-        height: 300px;
+        width: 350px;
       }
     </style>
   </head>
   <body>
-    <button onclick="getSearchQuery()">Test Query</button>
+    <input id="tags" name="tags" size="100" type="text" />
+    <div id="pageNumber">Page 1</div>
+    <button onclick="pagePrevious()"><-</button>
+    <button onclick="pageNext()">-></button>
+    <br />
+    <button onclick="getSearchQuery()">Search</button>
     <div id="results">Results:<br /></div>
 
     <script src="main.js"></script>

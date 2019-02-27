@@ -22,6 +22,7 @@
       }
 
       .grid {
+        margin: 0 auto;
       }
 
       /* clearfix */
@@ -31,29 +32,40 @@
         clear: both;
       }
 
+      /* 3 columns by default */
       .grid-item {
-        width: 300px;
+        width: 30vw;
         float: left;
-        /* vertical gutter */
         margin-bottom: 20px;
+      }
+
+      /* 5 columns for larger screens */
+      @media screen and (min-width: 900px) {
+        .grid-item {
+          width: 18vw;
+          float: left;
+          margin-bottom: 20px;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="row">
-      <div class="input-field col m8">
-        <input id="tags" name="tags" size="100" type="text" />
-        <label for="tags">Type your tags separated with spaces.</label>
-      </div>
-      <div class="input-field col m4">
-        <input
-          id="resultAmount"
-          name="resultAmount"
-          size="2"
-          type="number"
-          value="20"
-        />
-        <label for="resultAmount">Page size (default 20)</label>
+    <div class="container">
+      <div class="row">
+        <div class="input-field col m8">
+          <input id="tags" name="tags" size="100" type="text" />
+          <label for="tags">Type your tags separated with spaces.</label>
+        </div>
+        <div class="input-field col m4">
+          <input
+            id="resultAmount"
+            name="resultAmount"
+            size="2"
+            type="number"
+            value="20"
+          />
+          <label for="resultAmount">Page size (default 20)</label>
+        </div>
       </div>
     </div>
 

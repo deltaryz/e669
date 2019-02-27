@@ -39,7 +39,7 @@ function getSearchQuery() {
   } else {
     // check desired results size
     var resultSize = document.getElementById("resultAmount").value;
-    if (resultSize === "") resultSize = 10;
+    if (resultSize === "") resultSize = 20;
 
     // URL to request results from
     var requestURL =
@@ -69,7 +69,7 @@ function getSearchQuery() {
 
   // add all results to page
   function appendResultsToPage(resultsArray) {
-    resultsArray.forEach(function (result) {
+    resultsArray.forEach(function(result) {
       // convenience variables
       const fileUrl = result["file_url"];
       const fileName = result["artist"] + " - " + result["md5"];
@@ -99,7 +99,7 @@ function getSearchQuery() {
           .append(link)
           .masonry("appended", link)
           .imagesLoaded()
-          .progress(function () {
+          .progress(function() {
             $(".grid").masonry();
           });
       }

@@ -4,6 +4,10 @@ var currentPage = 1;
 function getSearchQuery() {
   // obtain tag query
   var tags = document.getElementById("tags").value;
+  const div = document.getElementById("results"); // div on page to append results
+
+  // Loading indicator
+  div.innerHTML = "<b>Loading, please wait...</b>";
 
   // make array of tags
   var splitTags = tags.split(" ");
@@ -17,13 +21,12 @@ function getSearchQuery() {
   // check if there are more than 6 tags
   if (splitTags.length > 6) {
     // let user know this is too many tags
-    var div = document.getElementById("results");
     div.innerHTML =
       "<b>Your fetishes are getting really specific.</b><br/>7+ tag searches are still a work in progress. For now, keep your searches at 6 tags or less!";
   } else {
     // URL to request results from
     var requestURL =
-      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=10&page=" +
+      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=40&page=" +
       currentPage +
       "&tags=" +
       tags; // TODO: replace this with own service
@@ -40,15 +43,12 @@ function getSearchQuery() {
       verboseLog("Request has loaded");
       var results = request.response;
 
-      var div = document.getElementById("results"); // div on page to append results
-      div.innerText = "<b>Loading, please wait...</b>";
-
-      appendResultsToPage(div, results); // Add results to page
+      appendResultsToPage(results); // Add results to page
     };
   }
 
   // add all results to page
-  function appendResultsToPage(div, resultsArray) {
+  function appendResultsToPage(resultsArray) {
     // padding and functionality variables
 
     div.innerHTML = "Results:<br />"; // clean up any existing results TODO: make this its own function
@@ -111,6 +111,13 @@ function pagePrevious() {
   updatePageNumber();
   getSearchQuery();
 }
+
+document.getElementById("tags").addEventListener("keyup", function(event) {
+  event.preventDefault();
+  if (event.keyCode === 13) {
+    getSearchQuery();
+  }
+});
 
 // update the displayed page number
 function updatePageNumber() {

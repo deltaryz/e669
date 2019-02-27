@@ -39,32 +39,55 @@ function getSearchQuery() {
     request.onload = function() {
       verboseLog("Request has loaded");
       var results = request.response;
-      appendResultsToPage("results", results); // Add results to page
+
+      var div = document.getElementById("results"); // div on page to append results
+      div.innerText = "<b>Loading, please wait...</b>";
+
+      appendResultsToPage(div, results); // Add results to page
     };
   }
 
   // add all results to page
-  function appendResultsToPage(divId, resultsArray) {
+  function appendResultsToPage(div, resultsArray) {
     // padding and functionality variables
 
-    var div = document.getElementById(divId); // div on page to append results
     div.innerHTML = "Results:<br />"; // clean up any existing results TODO: make this its own function
     resultsArray.forEach(function(result, resultIndex) {
       const fileUrl = result["file_url"];
       const fileName = result["artist"] + " - " + result["md5"];
+      const fileType = result["file_ext"];
 
       verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
 
-      div.innerHTML +=
-        '<a href="' +
-        fileUrl +
-        '"><img src="' +
-        result["file_url"] +
-        '" title="' +
-        result["tags"] +
-        '" alt="' +
-        resultIndex +
-        '">    </a>';
+      // check if file is an SWF or WEBM
+      if (fileType === "webm") {
+        div.innerHTML +=
+          '<a href="' +
+          fileUrl +
+          '"><video src="' +
+          result["file_url"] +
+          '" title="' +
+          result["tags"] +
+          '">    </a>';
+      } else if (fileType === "swf") {
+        div.innerHTML +=
+          '<a href="' +
+          fileUrl +
+          '"><img src="swf-icon.png" title="' +
+          result["tags"] +
+          '">    </a>';
+      } else {
+        div.innerHTML +=
+          '<a href="' +
+          fileUrl +
+          '"><img src="' +
+          result["file_url"] +
+          '" title="' +
+          result["tags"] +
+          '" alt="' +
+          resultIndex +
+          '">    </a>';
+      }
     });
   }
 }

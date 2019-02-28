@@ -30,6 +30,22 @@
 
       body {
         font-family: "Roboto", sans-serif;
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        background-color: #152f56;
+      }
+
+      main {
+        flex: 1 0 auto;
+      }
+
+      .center {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        width: 100%;
       }
 
       .grid {
@@ -52,7 +68,7 @@
         width: 30vw;
         float: left;
         margin-bottom: 20px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 1);
         transition: box-shadow 0.3s ease-in-out;
       }
 
@@ -67,7 +83,7 @@
       }
 
       .grid-item:hover {
-        box-shadow: 0 2px 5px rgba(0, 0, 255, 0.45);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
       }
 
       /* 5 columns for larger screens */
@@ -81,100 +97,117 @@
     </style>
   </head>
   <body>
-    <div class="navbar-fixed">
-      <nav class="indigo darken-2">
-        <div class="nav-wrapper">
-          <div class="row">
-            <div class="col s7 m6 l8">
-              <div class="input-field">
-                <input
-                  class="input-field invert-on-edit"
-                  id="tags"
-                  name="tags"
-                  type="search"
-                />
-                <label class="label-icon" for="tags"
-                  ><i class="material-icons">search</i></label
-                >
+    <header>
+      <div class="navbar-fixed">
+        <nav style="background-color: #284A81">
+          <div class="nav-wrapper">
+            <div class="row">
+              <div class="col s7 m6 l8">
+                <div class="input-field">
+                  <input
+                    class="input-field invert-on-edit"
+                    id="tags"
+                    name="tags"
+                    type="search"
+                  />
+                  <label class="label-icon" for="tags"
+                    ><i class="material-icons">search</i></label
+                  >
+                </div>
+              </div>
+
+              <div class="col s5 m6 l4">
+                <ul class="right">
+                  <li>
+                    <a
+                      class="waves-effect waves-light disabled"
+                      id="btnPreviousPage"
+                      onclick="pagePrevious()"
+                      style="padding-right: 0px; "
+                    >
+                      <i class="material-icons left">keyboard_arrow_left</i>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class=""
+                      id="pageNumber"
+                      onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
+                      style="text-align: center; padding-left: 10px; padding-right: 10px!important; background-color: #284A81"
+                      ><b>1</b></a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="waves-effect waves-light"
+                      id="btnNextPage"
+                      onclick="pageNext()"
+                      style="padding-left: 0px;"
+                    >
+                      <i class="material-icons right">keyboard_arrow_right</i>
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
+          </div>
+        </nav>
+      </div>
+    </header>
 
-            <div class="col s5 m6 l4">
-              <ul class="right">
-                <li>
-                  <a
-                    class="waves-effect waves-light disabled"
-                    id="btnPreviousPage"
-                    onclick="pagePrevious()"
-                    style="padding-right: 0px; "
-                  >
-                    <i class="material-icons left">keyboard_arrow_left</i>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    class=""
-                    id="pageNumber"
-                    onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
-                    style="text-align: center; padding-left: 10px; padding-right: 10px!important; background-color: #001970"
-                    ><b>1</b></a
-                  >
-                </li>
-                <li>
-                  <a
-                    class="waves-effect waves-light"
-                    id="btnNextPage"
-                    onclick="pageNext()"
-                    style="padding-left: 0px;"
-                  >
-                    <i class="material-icons right">keyboard_arrow_right</i>
-                  </a>
-                </li>
-              </ul>
-            </div>
+    <main>
+      <br /><br />
+
+      <div class="container">
+        <div
+          class="row"
+          style="display: block; margin: auto; text-align: center;"
+        >
+          <div class="col s8">
+            <input
+              class="blue-underline"
+              id="resultAmount"
+              name="resultAmount"
+              size="2"
+              style="color: white"
+              type="number"
+              value="20"
+            />
+            <label for="resultAmount">Page size</label>
+          </div>
+          <div class="col s4">
+            <a
+              ;
+              class="waves-effect waves-light btn center-align"
+              onclick="getSearchQuery()"
+              style="background-color: #284A81"
+            >
+              Search
+            </a>
           </div>
         </div>
-      </nav>
-    </div>
+      </div>
 
-    <br /><br />
+      <br />
 
-    <div class="container">
-      <div
-        class="row"
-        style="display: block; margin: auto; text-align: center;"
-      >
-        <div class="col s8">
-          <input
-            class="blue-underline"
-            id="resultAmount"
-            name="resultAmount"
-            size="2"
-            type="number"
-            value="20"
-          />
-          <label for="resultAmount">Page size</label>
-        </div>
-        <div class="col s4">
-          <a
-            class="waves-effect waves-light btn center-align indigo darken-2"
-            onclick="getSearchQuery()"
+      <div id="status" style="text-align: center; color: white;"><br /></div>
+      <div class="grid"></div>
+
+      <script src="js/jquery.js" type="text/javascript"></script>
+      <script src="js/materialize.min.js" type="text/javascript"></script>
+      <script src="js/masonry.min.js" type="text/javascript"></script>
+      <script src="js/imagesloaded.min.js" type="text/javascript"></script>
+      <script src="main.js"></script>
+    </main>
+
+    <footer class="page-footer" style="background-color: #2F5899">
+      <div class="row">
+        <div class="col s12 center-align">
+          <a href="https://github.com/techniponi/e669/" style="color: #ffffff">
+            GitHub</a
           >
-            Search
-          </a>
         </div>
       </div>
-    </div>
-
-    <br />
-
-    <div id="status" style="text-align: center;"><br /></div>
-    <div class="grid"></div>
-
-    <script src="js/jquery.js" type="text/javascript"></script>
-    <script src="js/materialize.min.js" type="text/javascript"></script>
-    <script src="js/masonry.min.js" type="text/javascript"></script>
-    <script src="js/imagesloaded.min.js" type="text/javascript"></script>
-    <script src="main.js"></script>
+    </footer>
   </body>
 </html>

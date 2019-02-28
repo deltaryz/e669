@@ -220,9 +220,7 @@ function showDetailsModal(
   document.getElementById("downloadButton").onclick = function() {
     download(currentUrl, "e" + currentId + "." + fileExtension);
   };
-  document.getElementById("fullsizeButton").onclick = function() {
-    window.location = fileUrl;
-  };
+  document.getElementById("fullsizeButton").setAttribute("href", fileUrl);
   document.getElementById("e621Button").setAttribute("href", currentUrl);
   document.getElementById("modalImage").innerHTML =
     "<img style='max-width: 100%' src='" + fileUrl + "' />";

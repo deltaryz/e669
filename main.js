@@ -118,7 +118,7 @@ function getSearchQuery() {
 
       // check if file is an SWF or WEBM
       if (fileType === "webm") {
-        // this is a webm
+        // this is a webm // TODO: modal popup for webms
         var link = document.createElement("a"); // make the image clickable
         link.href = fileUrl;
         var image = document.createElement("img");
@@ -140,7 +140,7 @@ function getSearchQuery() {
             $(".grid").masonry();
           });
       } else if (fileType === "swf") {
-        // this is an swf
+        // this is an swf // TODO: modal popup for swfs
         var link = document.createElement("a"); // make the image clickable
         link.href = fileUrl;
         var image = document.createElement("img");
@@ -184,6 +184,7 @@ function getSearchQuery() {
           event.preventDefault();
         });
 
+        // build the grid
         $(".grid")
           .append(link)
           .masonry("appended", link)
@@ -206,7 +207,7 @@ function getSearchQuery() {
 function showDetailsModal(
   tags,
   fileId,
-  artist,
+  artists,
   fileExtension,
   fileUrl,
   fileDescription
@@ -226,6 +227,27 @@ function showDetailsModal(
     "<img style='max-width: 100%' src='" + fileUrl + "' />";
   document.getElementById("modalDesc").innerHTML = fileDescription;
 
+  var artistArray = artists;
+  var modalArtists = document.getElementById("modalArtists");
+  modalArtists.innerHTML = "";
+  artistArray.forEach(function(tag) {
+    var currentTag = document.createElement("a");
+    currentTag.href =
+      "https://e669.fun/?search=" +
+      tag +
+      "&pagesize=" +
+      document.getElementById("resultAmount").value;
+    currentTag.setAttribute("class", "waves-effect waves-light btn indigo");
+    currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
+    currentTag.innerText = tag;
+
+    currentTag.addEventListener("click", function(event) {
+      addTagToSearch(tag);
+      event.preventDefault();
+    });
+    modalArtists.appendChild(currentTag);
+  });
+
   var tagArray = tags.split(" ");
   var modalTags = document.getElementById("modalTags");
   modalTags.innerHTML = "";
@@ -236,7 +258,7 @@ function showDetailsModal(
       tag +
       "&pagesize=" +
       document.getElementById("resultAmount").value;
-    currentTag.setAttribute("class", "waves-effect waves-light btn");
+    currentTag.setAttribute("class", "waves-effect waves-light btn blue");
     currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
     currentTag.innerText = tag;
 

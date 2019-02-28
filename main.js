@@ -3,6 +3,8 @@ var currentPage = 1;
 
 var grid = $(".grid");
 
+var lastSearchTags = "";
+
 // initialize Masonry
 grid.masonry({
   // options
@@ -17,6 +19,7 @@ function getSearchQuery() {
 
   // obtain tag query
   var tags = document.getElementById("tags").value;
+
   const statusDiv = document.getElementById("status"); // div on page to append results
 
   // Loading indicator
@@ -40,6 +43,13 @@ function getSearchQuery() {
     // check desired results size
     var resultSize = document.getElementById("resultAmount").value;
     if (resultSize === "") resultSize = 20;
+
+    // if the user searched a new query, reset to page 1
+    if (lastSearchTags !== tags) {
+      currentPage = 1;
+      updatePageNumber();
+      lastSearchTags = tags;
+    }
 
     // URL to request results from
     var requestURL =

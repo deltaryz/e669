@@ -149,7 +149,7 @@ function getSearchQuery() {
         image.setAttribute("data-position", "bottom"); // tooltip at bottom
         image.setAttribute("data-tooltip", artistName); // tooltip has artist name
         image.title = fileTags; // mouseover should display tags
-        image.src = fileUrl;
+        image.src = fileSampleUrl;
         link.appendChild(image);
 
         $(".grid")

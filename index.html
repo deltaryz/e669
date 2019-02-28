@@ -21,29 +21,9 @@
     <!--Let browser know website is optimized for mobile-->
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <style>
-        .nav-wrapper {
-            width: 100%;
-            /* this will automatically make the items it contains stretch verically */
-            justify-content: space-between;
-        }
-
-        /* the form is in your float right unordered list (ul) so add this to fix the chrome layout issue */
-        .nav-wrapper ul[class="right"] {
-            display: flex;
-        }
-
-        form {
-            /* don't let the blue bleed through */
-            background: white;
-        }
-
-        /* if you want it to be responsive pick your number and add this css */
-        @media only screen and (max-width: 480px) {
-            flex-direction:column
-
-        ;
-        }
-
+      .input-field input[type="search"] {
+        height: 64px !important;
+      }
       .btn-floating {
         background-color: #666ad1;
       }
@@ -102,13 +82,13 @@
   </head>
   <body>
     <div class="navbar-fixed">
-        <nav class="indigo darken-2">
+      <nav class="indigo darken-2">
         <div class="nav-wrapper">
           <div class="row">
-              <div class="col s7 m6 l8">
+            <div class="col s7 m6 l8">
               <div class="input-field">
                 <input
-                  class="invert-on-edit"
+                  class="input-field invert-on-edit"
                   id="tags"
                   name="tags"
                   type="search"
@@ -119,33 +99,33 @@
               </div>
             </div>
 
-              <div class="col s5 m6 l4">
+            <div class="col s5 m6 l4">
               <ul class="right">
                 <li>
                   <a
-                          class="waves-effect waves-light disabled"
-                          id="btnPreviousPage"
-                          style="padding-right: 0px; "
-                          onclick="pagePrevious()"
+                    class="waves-effect waves-light disabled"
+                    id="btnPreviousPage"
+                    onclick="pagePrevious()"
+                    style="padding-right: 0px; "
                   >
                     <i class="material-icons left">keyboard_arrow_left</i>
                   </a>
                 </li>
                 <li>
                   <a
-                          class=""
-                          id="pageNumber"
-                          onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
-                          style="text-align: center; padding-left: 10px; padding-right: 10px!important; background-color: #001970"
+                    class=""
+                    id="pageNumber"
+                    onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
+                    style="text-align: center; padding-left: 10px; padding-right: 10px!important; background-color: #001970"
                     ><b>1</b></a
                   >
                 </li>
                 <li>
                   <a
-                          class="waves-effect waves-light"
-                          style="padding-left: 0px;"
-                          id="btnNextPage"
-                          onclick="pageNext()"
+                    class="waves-effect waves-light"
+                    id="btnNextPage"
+                    onclick="pageNext()"
+                    style="padding-left: 0px;"
                   >
                     <i class="material-icons right">keyboard_arrow_right</i>
                   </a>
@@ -166,19 +146,19 @@
       >
         <div class="col s8">
           <input
-                  id="resultAmount"
-                  class="blue-underline"
-                  name="resultAmount"
-                  size="2"
-                  type="number"
-                  value="20"
+            class="blue-underline"
+            id="resultAmount"
+            name="resultAmount"
+            size="2"
+            type="number"
+            value="20"
           />
           <label for="resultAmount">Page size</label>
         </div>
         <div class="col s4">
           <a
-                  class="waves-effect waves-light btn center-align indigo darken-2"
-                  onclick="getSearchQuery()"
+            class="waves-effect waves-light btn center-align indigo darken-2"
+            onclick="getSearchQuery()"
           >
             Search
           </a>

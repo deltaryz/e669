@@ -4,6 +4,8 @@ var currentPage = 1;
 var grid = $(".grid");
 
 var lastSearchTags = "";
+var requestURL = "https://cors-anywhere.herokuapp.com/https://e621.net/";
+var corsForwardURL = "https://cors-anywhere.herokuapp.com/";
 
 // initialize Masonry
 grid.masonry({
@@ -47,12 +49,13 @@ function getSearchQuery() {
     // if the user searched a new query, reset to page 1
     if (lastSearchTags !== tags) {
       currentPage = 1;
+      document.getElementById("btnPreviousPage").classList.add("disabled");
       updatePageNumber();
       lastSearchTags = tags;
     }
 
     // URL to request results from
-    var requestURL =
+    requestURL =
       "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=" +
       resultSize +
       "&page=" + // TODO: replace this service with own service
@@ -132,6 +135,7 @@ function getSearchQuery() {
 function pageNext() {
   verboseLog("User is moving to next page");
   currentPage++;
+  document.getElementById("btnPreviousPage").classList.remove("disabled");
   updatePageNumber();
   getSearchQuery();
 }
@@ -139,15 +143,21 @@ function pageNext() {
 // go to previous page and automatically reload results
 function pagePrevious() {
   verboseLog("User is moving to previous page");
-  if (currentPage > 1) currentPage--;
+  if (currentPage > 1) {
+    currentPage--;
+    if (currentPage == 1) {
+      document.getElementById("btnPreviousPage").classList.add("disabled");
+    }
+  }
   updatePageNumber();
   getSearchQuery();
 }
 
 // update the displayed page number
 function updatePageNumber() {
-  pageNumberElement = document.getElementById("pageNumber").innerText =
-    "Page " + currentPage;
+  pageNumberElement = document.getElementById(
+    "pageNumber"
+  ).innerText = currentPage;
 }
 
 // Print to console only if verbose output is enabled

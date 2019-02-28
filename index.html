@@ -13,10 +13,30 @@
       rel="stylesheet"
       type="text/css"
     />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
 
     <!--Let browser know website is optimized for mobile-->
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <style>
+      nav {
+        background-color: #303f9f;
+      }
+
+      .btn {
+        background-color: #303f9f;
+      }
+
+      .btn-flat {
+        color: white;
+      }
+
+      .btn-floating {
+        background-color: #666ad1;
+      }
+
       body {
         font-family: "Roboto", sans-serif;
       }
@@ -30,6 +50,10 @@
         content: "";
         display: block;
         clear: both;
+      }
+
+      .invert-on-edit {
+        color: white;
       }
 
       /* 3 columns by default */
@@ -50,13 +74,68 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="row">
-        <div class="input-field col m8">
-          <input id="tags" name="tags" size="100" type="text" />
-          <label for="tags">Type your tags separated with spaces.</label>
+    <div class="navbar-fixed">
+      <nav>
+        <div class="nav-wrapper">
+          <div class="row">
+            <div class="col s5 m6 l8">
+              <div class="input-field">
+                <input
+                  class="invert-on-edit"
+                  id="tags"
+                  name="tags"
+                  type="search"
+                />
+                <label class="label-icon" for="tags"
+                  ><i class="material-icons">search</i></label
+                >
+              </div>
+            </div>
+
+            <div class="col s7 m6 l4">
+              <ul class="right">
+                <li>
+                  <a
+                    class="waves-effect waves-light btn-flat disabled"
+                    id="btnPreviousPage"
+                    onclick="pagePrevious()"
+                  >
+                    <i class="material-icons left">keyboard_arrow_left</i>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="btn-floating"
+                    id="pageNumber"
+                    onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
+                    style="text-align: center; padding-right: 0!important;"
+                    ><b>1</b></a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="waves-effect waves-light btn-flat"
+                    id="btnNextPage"
+                    onclick="pageNext()"
+                  >
+                    <i class="material-icons right">keyboard_arrow_right</i>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
-        <div class="input-field col m4">
+      </nav>
+    </div>
+
+    <br /><br />
+
+    <div class="container">
+      <div
+        class="row"
+        style="display: block; margin: auto; text-align: center;"
+      >
+        <div class="col s8">
           <input
             id="resultAmount"
             name="resultAmount"
@@ -64,18 +143,22 @@
             type="number"
             value="20"
           />
-          <label for="resultAmount">Page size (default 20)</label>
+          <label for="resultAmount">Page size</label>
+        </div>
+        <div class="col s4">
+          <a
+            class="waves-effect waves-light btn center-align"
+            onclick="getSearchQuery()"
+          >
+            Search
+          </a>
         </div>
       </div>
     </div>
 
-    <div id="pageNumber">Page 1</div>
-    <button onclick="pagePrevious()"><-</button>
-    <button onclick="pageNext()">-></button>
     <br />
-    <button onclick="getSearchQuery()">Search</button>
 
-    <div id="status"><br /></div>
+    <div id="status" style="text-align: center;"><br /></div>
     <div class="grid"></div>
 
     <script src="js/jquery.js" type="text/javascript"></script>

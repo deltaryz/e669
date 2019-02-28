@@ -176,6 +176,15 @@
           margin-bottom: 20px;
         }
       }
+      /* Shrink navigation margins for narrow screens */
+      @media only screen and (min-width: 0) {
+        i.right {
+          margin-left: 10px;
+        }
+        i.left {
+          margin-right: 10px;
+        }
+      }
     </style>
 
     <script src="js/jquery.js" type="text/javascript"></script>
@@ -191,7 +200,8 @@
           <div class="nav-wrapper">
             <div class="row">
               <div class="col s7 m6 l8">
-                <div class="input-field">
+                <div class="row">
+                <div class="col input-field s9">
                   <input
                     class="input-field invert-on-edit"
                     id="tags"
@@ -201,6 +211,17 @@
                   <label class="label-icon" for="tags"
                     ><i class="material-icons">search</i></label
                   >
+                </div>
+                <div class="col s1 hide-on-med-and-down">
+                  <a
+                    ;
+                    class="waves-effect waves-light btn center-align"
+                    onclick="getSearchQuery()"
+                    style="background-color: #284A81"
+                  >
+                    Search
+                   </a>
+                </div>
                 </div>
               </div>
 
@@ -246,35 +267,7 @@
     <main>
       <br /><br />
 
-      <div class="container">
-        <div
-          class="row"
-          style="display: block; margin: auto; text-align: center;"
-        >
-          <div class="col s8">
-            <input
-              class="blue-underline"
-              id="resultAmount"
-              name="resultAmount"
-              size="2"
-              style="color: white"
-              type="number"
-              value="20"
-            />
-            <label for="resultAmount">Page size</label>
-          </div>
-          <div class="col s4">
-            <a
-              ;
-              class="waves-effect waves-light btn center-align"
-              onclick="getSearchQuery()"
-              style="background-color: #284A81"
-            >
-              Search
-            </a>
-          </div>
-        </div>
-      </div>
+      
 
       <br />
 
@@ -335,7 +328,9 @@
     </main>
 
     <footer class="page-footer" style="background-color: #2F5899">
-      <div class="row center-align">
+      <div class="row">
+      <div class="col center-align">
+        <div class="center-align">
         <a href="https://github.com/techniponi/e669/" style="color: #ffffff">
           <img
             src="ico/favicon-96x96.png"
@@ -343,6 +338,22 @@
         ><br />
         e669 is created and maintained by
         <a href="https://twitter.com/deltaryz"><b>∆•RYZ</b></a>
+      </div>
+      </div>
+      <div class="col s2 right">
+        <div class="center-align">
+            <input
+              class="blue-underline"
+              id="resultAmount"
+              name="resultAmount"
+              size="2"
+              style="color: white; text-align: center;"
+              type="number"
+              value="20"
+            />
+            <label for="resultAmount">Page size</label>
+          </div>
+        </div>
       </div>
     </footer>
   </body>

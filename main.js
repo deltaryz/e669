@@ -179,7 +179,8 @@ function getSearchQuery() {
             artistName,
             fileType,
             fileUrl,
-            fileDescription
+            fileDescription,
+            result
           );
           event.preventDefault();
         });
@@ -210,7 +211,8 @@ function showDetailsModal(
   artists,
   fileExtension,
   fileUrl,
-  fileDescription
+  fileDescription,
+  result
 ) {
   currentUrl = "https://e621.net/post/show/" + fileId;
   currentId = fileId;
@@ -221,8 +223,7 @@ function showDetailsModal(
   document.getElementById("fullsizeButton").onclick = function() {
     window.location = fileUrl;
   };
-  document.getElementById("modalHeader").innerHTML =
-    "<a href='" + currentUrl + "'>View on e621</a>";
+  document.getElementById("e621Button").setAttribute("href", currentUrl);
   document.getElementById("modalImage").innerHTML =
     "<img style='max-width: 100%' src='" + fileUrl + "' />";
   document.getElementById("modalDesc").innerHTML = fileDescription;

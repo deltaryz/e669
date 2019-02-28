@@ -21,17 +21,28 @@
     <!--Let browser know website is optimized for mobile-->
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <style>
-      nav {
-        background-color: #303f9f;
-      }
+        .nav-wrapper {
+            width: 100%;
+            /* this will automatically make the items it contains stretch verically */
+            justify-content: space-between;
+        }
 
-      .btn {
-        background-color: #303f9f;
-      }
+        /* the form is in your float right unordered list (ul) so add this to fix the chrome layout issue */
+        .nav-wrapper ul[class="right"] {
+            display: flex;
+        }
 
-      .btn-flat {
-        color: white;
-      }
+        form {
+            /* don't let the blue bleed through */
+            background: white;
+        }
+
+        /* if you want it to be responsive pick your number and add this css */
+        @media only screen and (max-width: 480px) {
+            flex-direction:column
+
+        ;
+        }
 
       .btn-floating {
         background-color: #666ad1;
@@ -91,10 +102,10 @@
   </head>
   <body>
     <div class="navbar-fixed">
-      <nav>
+        <nav class="indigo darken-2">
         <div class="nav-wrapper">
           <div class="row">
-            <div class="col s5 m6 l8">
+              <div class="col s7 m6 l8">
               <div class="input-field">
                 <input
                   class="invert-on-edit"
@@ -108,31 +119,33 @@
               </div>
             </div>
 
-            <div class="col s7 m6 l4">
+              <div class="col s5 m6 l4">
               <ul class="right">
                 <li>
                   <a
-                    class="waves-effect waves-light btn-flat disabled"
-                    id="btnPreviousPage"
-                    onclick="pagePrevious()"
+                          class="waves-effect waves-light disabled"
+                          id="btnPreviousPage"
+                          style="padding-right: 0px; "
+                          onclick="pagePrevious()"
                   >
                     <i class="material-icons left">keyboard_arrow_left</i>
                   </a>
                 </li>
                 <li>
                   <a
-                    class="btn-floating"
-                    id="pageNumber"
-                    onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
-                    style="text-align: center; padding-right: 0!important;"
+                          class=""
+                          id="pageNumber"
+                          onclick="document.location=requestURL.replace(corsForwardURL, '').replace('.json', '');"
+                          style="text-align: center; padding-left: 10px; padding-right: 10px!important; background-color: #001970"
                     ><b>1</b></a
                   >
                 </li>
                 <li>
                   <a
-                    class="waves-effect waves-light btn-flat"
-                    id="btnNextPage"
-                    onclick="pageNext()"
+                          class="waves-effect waves-light"
+                          style="padding-left: 0px;"
+                          id="btnNextPage"
+                          onclick="pageNext()"
                   >
                     <i class="material-icons right">keyboard_arrow_right</i>
                   </a>
@@ -153,18 +166,19 @@
       >
         <div class="col s8">
           <input
-            id="resultAmount"
-            name="resultAmount"
-            size="2"
-            type="number"
-            value="20"
+                  id="resultAmount"
+                  class="blue-underline"
+                  name="resultAmount"
+                  size="2"
+                  type="number"
+                  value="20"
           />
           <label for="resultAmount">Page size</label>
         </div>
         <div class="col s4">
           <a
-            class="waves-effect waves-light btn center-align"
-            onclick="getSearchQuery()"
+                  class="waves-effect waves-light btn center-align indigo darken-2"
+                  onclick="getSearchQuery()"
           >
             Search
           </a>

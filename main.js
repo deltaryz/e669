@@ -7,6 +7,10 @@ var lastSearchTags = "";
 var requestURL = "https://cors-anywhere.herokuapp.com/https://e621.net/";
 var corsForwardURL = "https://cors-anywhere.herokuapp.com/";
 
+var currentUrl = "";
+var currentId = "";
+var currentExt = "";
+
 // initialize Masonry
 grid.masonry({
   // options
@@ -14,6 +18,13 @@ grid.masonry({
   fitWidth: true,
   gutter: 10
 });
+
+// since the page just loaded, we need to check for URL parameters
+if (getQueryVariable("search")) {
+  // we came to this page intending to search something
+  document.getElementById("tags").value = getQueryVariable("search");
+  getSearchQuery();
+}
 
 function getSearchQuery() {
   // scroll back to top
@@ -80,6 +91,7 @@ function getSearchQuery() {
       var results = request.response;
 
       appendResultsToPage(results); // Add results to page
+      $(".modal").modal(); // make sure all modals are initialized
       statusDiv.innerHTML = "";
     };
   }
@@ -93,7 +105,9 @@ function getSearchQuery() {
       const fileName = result["artist"] + " - " + result["md5"];
       const fileType = result["file_ext"];
       const fileTags = result["tags"];
+      const fileId = result["id"];
       const artistName = result["artist"];
+      const fileDescription = result["description"];
       const pageUrl = "https://e621.net/post/show/" + result["id"];
 
       verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
@@ -122,7 +136,7 @@ function getSearchQuery() {
             $(".grid").masonry();
           });
       } else if (fileType === "swf") {
-        // this is am swf
+        // this is an swf
         var link = document.createElement("a"); // make the image clickable
         link.href = fileUrl;
         var image = document.createElement("img");
@@ -154,6 +168,17 @@ function getSearchQuery() {
         image.title = fileTags; // mouseover should display tags
         image.src = fileSampleUrl;
         link.appendChild(image);
+        link.addEventListener("click", function(event) {
+          showDetailsModal(
+            fileTags,
+            fileId,
+            artistName,
+            fileType,
+            fileUrl,
+            fileDescription
+          );
+          event.preventDefault();
+        });
 
         $(".grid")
           .append(link)
@@ -173,6 +198,44 @@ function getSearchQuery() {
 /*
 // GENERAL HELPER FUNCTIONS
 */
+
+function showDetailsModal(
+  tags,
+  fileId,
+  artist,
+  fileExtension,
+  fileUrl,
+  fileDescription
+) {
+  currentUrl = "https://e621.net/post/show/" + fileId;
+  currentId = fileId;
+  $("#detailsModal").modal("open");
+  document.getElementById("downloadButton").onclick = function() {
+    download(currentUrl, currentId + "." + fileExtension);
+  };
+  document.getElementById("modalHeader").innerHTML =
+    "<a href='" + currentUrl + "'>View on e621</a>";
+  document.getElementById("modalImage").innerHTML =
+    "<img style='max-width: 100%' src='" + fileUrl + "' />";
+  document.getElementById("modalDesc").innerHTML = fileDescription;
+
+  var tagArray = tags.split(" ");
+  var modalTags = document.getElementById("modalTags");
+  modalTags.innerHTML = "";
+  tagArray.forEach(function(tag) {
+    var currentTag = document.createElement("a");
+    currentTag.href = "https://e669.fun/?search=" + tag;
+    currentTag.setAttribute("class", "waves-effect waves-light btn");
+    currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
+    currentTag.innerText = tag;
+
+    currentTag.addEventListener("click", function(event) {
+      addTagToSearch(tag);
+      event.preventDefault();
+    });
+    modalTags.appendChild(currentTag);
+  });
+}
 
 // advance to next page and automatically reload results
 function pageNext() {
@@ -194,6 +257,24 @@ function pagePrevious() {
   }
   updatePageNumber();
   getSearchQuery();
+}
+
+// allows using URL variables
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split("=");
+    if (pair[0] == variable) {
+      return pair[1];
+    }
+  }
+  return false;
+}
+
+// add a tag to the existing searchbox
+function addTagToSearch(tag) {
+  document.getElementById("tags").value += " " + tag;
 }
 
 // update the displayed page number

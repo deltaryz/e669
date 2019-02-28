@@ -177,6 +177,12 @@
         }
       }
     </style>
+
+    <script src="js/jquery.js" type="text/javascript"></script>
+    <script src="js/materialize.min.js" type="text/javascript"></script>
+    <script src="js/masonry.min.js" type="text/javascript"></script>
+    <script src="js/imagesloaded.min.js" type="text/javascript"></script>
+    <script src="js/download.js" type="text/javascript"></script>
   </head>
   <body>
     <header>
@@ -275,10 +281,45 @@
       <div id="status" style="text-align: center; color: white;"><br /></div>
       <div class="grid"></div>
 
-      <script src="js/jquery.js" type="text/javascript"></script>
-      <script src="js/materialize.min.js" type="text/javascript"></script>
-      <script src="js/masonry.min.js" type="text/javascript"></script>
-      <script src="js/imagesloaded.min.js" type="text/javascript"></script>
+      <div class="modal modal-fixed-footer" id="detailsModal">
+        <div class="modal-content">
+          <div class="row">
+            <div class="col s6">
+              <p id="modalImage">text</p>
+            </div>
+            <div class="col s6">
+              <p>
+                Left-click to add to your current search, middle-click to open a
+                new tab.
+              </p>
+              <p id="modalTags">text</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col s12">
+              <p id="modalDesc">text</p>
+              <b><p id="modalHeader">Header</p></b>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a
+            class="modal-close waves-effect waves-teal btn-flat"
+            id="downloadButton"
+            >Download</a
+          >
+          <a
+            class="modal-close waves-effect waves-teal btn-flat"
+            onclick="getSearchQuery()"
+            >Re-Search</a
+          >
+          <a class="modal-close waves-effect waves-teal btn-flat" href="#!"
+            >Close</a
+          >
+        </div>
+      </div>
+
       <script src="main.js"></script>
     </main>
 

@@ -16,6 +16,9 @@ grid.masonry({
 });
 
 function getSearchQuery() {
+  // scroll back to top
+  window.scrollTo(0, 0);
+
   // clear current grid
   grid.masonry("remove", grid.find(".grid-item"));
 

@@ -218,7 +218,7 @@ function showDetailsModal(
   currentId = fileId;
   $("#detailsModal").modal("open");
   document.getElementById("downloadButton").onclick = function() {
-    download(currentUrl, currentId + "." + fileExtension);
+    download(currentUrl, "e" + currentId + "." + fileExtension);
   };
   document.getElementById("fullsizeButton").onclick = function() {
     window.location = fileUrl;
@@ -227,6 +227,29 @@ function showDetailsModal(
   document.getElementById("modalImage").innerHTML =
     "<img style='max-width: 100%' src='" + fileUrl + "' />";
   document.getElementById("modalDesc").innerHTML = fileDescription;
+  var modalMetadata = document.getElementById("modalMetadata");
+  modalMetadata.innerHTML =
+    "Dimensions: " +
+    result["width"] +
+    "x" +
+    result["height"] +
+    "<br />" +
+    "MD5: " +
+    result["md5"] +
+    "<br/>" +
+    "Rating: " +
+    result["rating"] +
+    "<br/>" +
+    "Sources: ";
+
+  if (result["sources"]) {
+    result["sources"].forEach(function(source, index) {
+      modalMetadata.innerHTML +=
+        "<a href='" + source + "'>" + ++index + "</a>        ";
+    });
+  } else {
+    modalMetadata.innerHTML += "(none)";
+  }
 
   var artistArray = artists;
   var modalArtists = document.getElementById("modalArtists");
@@ -242,9 +265,19 @@ function showDetailsModal(
     currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
     currentTag.innerText = tag;
 
-    currentTag.addEventListener("click", function(event) {
+    currentTag.addEventListener("contextmenu", function(event) {
       addTagToSearch(tag);
       event.preventDefault();
+    });
+
+    currentTag.addEventListener("click", function(event) {
+      event.preventDefault();
+      window.location =
+        "https://e669.fun/?search=" +
+        tag +
+        "&pagesize=" +
+        document.getElementById("resultAmount").value;
+      return false;
     });
     modalArtists.appendChild(currentTag);
   });
@@ -263,9 +296,19 @@ function showDetailsModal(
     currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
     currentTag.innerText = tag;
 
-    currentTag.addEventListener("click", function(event) {
+    currentTag.addEventListener("contextmenu", function(event) {
       addTagToSearch(tag);
       event.preventDefault();
+    });
+
+    currentTag.addEventListener("click", function(event) {
+      event.preventDefault();
+      window.location =
+        "https://e669.fun/?search=" +
+        tag +
+        "&pagesize=" +
+        document.getElementById("resultAmount").value;
+      return false;
     });
     modalTags.appendChild(currentTag);
   });

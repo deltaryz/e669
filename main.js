@@ -22,6 +22,7 @@ function getSearchQuery() {
   // obtain tag query
   var tags = document.getElementById("tags").value;
 
+  // status indicator
   const statusDiv = document.getElementById("status"); // div on page to append results
 
   // Loading indicator
@@ -102,14 +103,14 @@ function getSearchQuery() {
         // blegh
       } else {
         // this is an image
-        var link = document.createElement("a");
+        var link = document.createElement("a"); // make the image clickable
         link.href = fileUrl;
         var image = document.createElement("img");
-        image.classList.add("grid-item", "tooltipped");
-        image.setAttribute("data-position", "bottom");
-        image.setAttribute("data-tooltip", artistName);
-        image.title = fileTags;
-        image.src = fileUrl;
+        image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
+        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+        image.title = fileTags; // mouseover should display tags
+        image.src = fileUrl; // clicking it will directly load the image
         link.appendChild(image);
 
         $(".grid")

@@ -20,6 +20,10 @@ grid.masonry({
 });
 
 // since the page just loaded, we need to check for URL parameters
+if (getQueryVariable("pagesize")) {
+  document.getElementById("resultAmount").value = getQueryVariable("pagesize");
+}
+
 if (getQueryVariable("search")) {
   // we came to this page intending to search something
   document.getElementById("tags").value = getQueryVariable("search");
@@ -213,6 +217,9 @@ function showDetailsModal(
   document.getElementById("downloadButton").onclick = function() {
     download(currentUrl, currentId + "." + fileExtension);
   };
+  document.getElementById("fullsizeButton").onclick = function() {
+    window.location = fileUrl;
+  };
   document.getElementById("modalHeader").innerHTML =
     "<a href='" + currentUrl + "'>View on e621</a>";
   document.getElementById("modalImage").innerHTML =
@@ -224,7 +231,11 @@ function showDetailsModal(
   modalTags.innerHTML = "";
   tagArray.forEach(function(tag) {
     var currentTag = document.createElement("a");
-    currentTag.href = "https://e669.fun/?search=" + tag;
+    currentTag.href =
+      "https://e669.fun/?search=" +
+      tag +
+      "&pagesize=" +
+      document.getElementById("resultAmount").value;
     currentTag.setAttribute("class", "waves-effect waves-light btn");
     currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
     currentTag.innerText = tag;

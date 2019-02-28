@@ -86,6 +86,7 @@ function getSearchQuery() {
     resultsArray.forEach(function(result) {
       // convenience variables
       const fileUrl = result["file_url"];
+      const fileSampleUrl = result["sample_url"];
       const fileName = result["artist"] + " - " + result["md5"];
       const fileType = result["file_ext"];
       const fileTags = result["tags"];
@@ -96,21 +97,59 @@ function getSearchQuery() {
 
       // check if file is an SWF or WEBM
       if (fileType === "webm") {
-        // TODO: implement webm functionality for masonry
-        // asdf
+        // this is a webm
+        var link = document.createElement("a"); // make the image clickable
+        link.href = fileUrl;
+        var image = document.createElement("img");
+        image.classList.add("grid-item", "tooltipped", "webm-shadow"); // make sure it has a tooltip
+        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+        image.title = fileTags; // mouseover should display tags
+        image.src = fileSampleUrl; // it's a webm so we have to show a preview
+        link.appendChild(image);
+
+        $(".grid")
+          .append(link)
+          .masonry("appended", link)
+          .imagesLoaded()
+          .progress(function() {
+            $(document).ready(function() {
+              $(".tooltipped").tooltip();
+            });
+            $(".grid").masonry();
+          });
       } else if (fileType === "swf") {
-        // TODO: implement swf functionality for masonry
-        // blegh
+        // this is am swf
+        var link = document.createElement("a"); // make the image clickable
+        link.href = fileUrl;
+        var image = document.createElement("img");
+        image.classList.add("grid-item", "tooltipped", "swf-shadow"); // make sure it has a tooltip
+        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+        image.title = fileTags; // mouseover should display tags
+        image.src = "img/swf-icon.png"; // it's an swf so we have to indicate this
+        link.appendChild(image);
+
+        $(".grid")
+          .append(link)
+          .masonry("appended", link)
+          .imagesLoaded()
+          .progress(function() {
+            $(document).ready(function() {
+              $(".tooltipped").tooltip();
+            });
+            $(".grid").masonry();
+          });
       } else {
         // this is an image
         var link = document.createElement("a"); // make the image clickable
-        link.href = fileUrl;
+        link.href = fileUrl; // clicking it will directly load the image
         var image = document.createElement("img");
         image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
         image.setAttribute("data-position", "bottom"); // tooltip at bottom
         image.setAttribute("data-tooltip", artistName); // tooltip has artist name
         image.title = fileTags; // mouseover should display tags
-        image.src = fileUrl; // clicking it will directly load the image
+        image.src = fileUrl;
         link.appendChild(image);
 
         $(".grid")

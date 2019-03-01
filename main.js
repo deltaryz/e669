@@ -228,7 +228,18 @@ function showDetailsModal(
   document.getElementById("e621Button").setAttribute("href", currentUrl);
   document.getElementById("modalImage").innerHTML =
     "<img style='max-width: 100%' src='" + fileUrl + "' />";
-  document.getElementById("modalDesc").innerHTML = fileDescription;
+  if (fileDescription != "") {
+    document
+      .getElementById("modalDesc")
+      .setAttribute(
+        "style",
+        "background-color: #E5E5E5; border-radius: 3px; padding: 10px 10px;"
+      );
+    document.getElementById("modalDesc").innerHTML = fileDescription;
+  } else {
+    document.getElementById("modalDesc").setAttribute("style", "");
+    document.getElementById("modalDesc").innerHTML = fileDescription;
+  }
   var modalMetadata = document.getElementById("modalMetadata");
   modalMetadata.innerHTML =
     "Dimensions: " +

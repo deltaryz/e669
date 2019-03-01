@@ -41,6 +41,7 @@ if (getQueryVariable("page")) {
 // we came to this page intending to search something
 if (getQueryVariable("search")) {
   var currentSearch = getQueryVariable("search");
+  if (currentSearch === "false") currentSearch = ""; // make sure blank searches don't get stringified to "false"
   document.getElementById("tags").value = currentSearch.replace("%20", " "); // de-URLify this for the textbox
   getSearchQuery(false); // automatically trigger search
 }
@@ -357,10 +358,11 @@ function showDetailsModal(
 
 // load page with new url
 function reloadPage(paramPage, paramSearch, paramPageSize) {
-  if (!paramPage) paramPage = getQueryVariable("page");
-  if (!paramSearch) paramSearch = getQueryVariable("search");
+  if (!paramPage) paramPage = currentPage;
+  if (!paramSearch) paramSearch = document.getElementById("tags").value;
   if (!paramPageSize)
     paramPageSize = document.getElementById("resultAmount").value;
+
   window.location =
     "?page=" +
     paramPage +

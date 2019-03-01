@@ -1,12 +1,14 @@
-var verboseOutput = true;
+var verboseOutput = true; // make the terminal vomit everything
 var currentPage = 1;
 
-var grid = $(".grid");
+var grid = $(".grid"); // fine, i'll use jquery ._.
 
+// URL query vars
 var lastSearchTags = "";
-var requestURL = "https://cors-anywhere.herokuapp.com/https://e621.net/";
-var corsForwardURL = "https://cors-anywhere.herokuapp.com/";
+var requestURL = ""; // init for later
+var corsForwardURL = "https://cors.dusky.horse/";
 
+// these need to be init'd globally for the modal dialog
 var currentUrl = "";
 var currentId = "";
 var currentExt = "";
@@ -75,9 +77,10 @@ function getSearchQuery() {
 
     // URL to request results from
     requestURL =
-      "https://cors-anywhere.herokuapp.com/https://e621.net/post/index.json?limit=" +
+      corsForwardURL +
+      "e621.net:443/post/index.json?limit=" +
       resultSize +
-      "&page=" + // TODO: replace this service with own service
+      "&page=" +
       currentPage +
       "&tags=" +
       tags;

@@ -176,13 +176,17 @@
           margin-bottom: 20px;
         }
       }
+
       /* Shrink navigation margins for narrow screens */
-      @media only screen and (min-width: 0) {
-        i.right {
-          margin-left: 10px;
+      @media screen and (max-width: 400px) {
+        .right {
+          margin-left: 0px;
+          margin-right: 0px;
         }
-        i.left {
-          margin-right: 10px;
+
+        .left {
+          margin-left: 0px;
+          margin-right: 0px;
         }
       }
     </style>
@@ -201,27 +205,37 @@
             <div class="row">
               <div class="col s7 m6 l8">
                 <div class="row">
-                <div class="col input-field s9">
-                  <input
-                    class="input-field invert-on-edit"
-                    id="tags"
-                    name="tags"
-                    type="search"
-                  />
-                  <label class="label-icon" for="tags"
-                    ><i class="material-icons">search</i></label
-                  >
-                </div>
-                <div class="col s1 hide-on-med-and-down">
-                  <a
-                    ;
-                    class="waves-effect waves-light btn center-align"
-                    onclick="getSearchQuery()"
-                    style="background-color: #284A81"
-                  >
-                    Search
-                   </a>
-                </div>
+                  <div class="col input-field s10">
+                    <input
+                      class="input-field invert-on-edit"
+                      id="tags"
+                      name="tags"
+                      type="search"
+                    />
+                    <label class="label-icon" for="tags"
+                      ><i class="material-icons">search</i></label
+                    >
+                  </div>
+                  <div class="col s2 hide-on-med-and-down">
+                    <a
+                      ;
+                      class="waves-effect waves-light btn center-align"
+                      onclick="getSearchQuery()"
+                      style="background-color: #2F5899"
+                    >
+                      Search
+                    </a>
+
+                    <input
+                      class="center"
+                      id="resultAmount"
+                      name="resultAmount"
+                      size="2"
+                      style="color: white; text-align: center; width: 5%; height:25px; margin-left: 30px; background-color: #152f56; border-bottom: 0; border-radius: 3px;"
+                      type="number"
+                      value="20"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -232,7 +246,7 @@
                       class="waves-effect waves-light disabled"
                       id="btnPreviousPage"
                       onclick="pagePrevious()"
-                      style="padding-right: 0px; "
+                      style="width: 25px; margin-left: 0; padding-left: 0; margin-right: 10px;"
                     >
                       <i class="material-icons left">keyboard_arrow_left</i>
                     </a>
@@ -251,7 +265,7 @@
                       class="waves-effect waves-light"
                       id="btnNextPage"
                       onclick="pageNext()"
-                      style="padding-left: 0px;"
+                      style="width: 25px; margin-right: 0; padding-right: 0; margin-left: 10px;"
                     >
                       <i class="material-icons right">keyboard_arrow_right</i>
                     </a>
@@ -266,8 +280,6 @@
 
     <main>
       <br /><br />
-
-      
 
       <br />
 
@@ -329,31 +341,22 @@
 
     <footer class="page-footer" style="background-color: #2F5899">
       <div class="row">
-      <div class="col center-align">
-        <div class="center-align">
-        <a href="https://github.com/techniponi/e669/" style="color: #ffffff">
-          <img
-            src="ico/favicon-96x96.png"
-            style="text-align: center; height: 64px; -webkit-filter: drop-shadow(0 0px 2px rgba(0, 0, 0, 0.5));"/></a
-        ><br />
-        e669 is created and maintained by
-        <a href="https://twitter.com/deltaryz"><b>∆•RYZ</b></a>
-      </div>
-      </div>
-      <div class="col s2 right">
-        <div class="center-align">
-            <input
-              class="blue-underline"
-              id="resultAmount"
-              name="resultAmount"
-              size="2"
-              style="color: white; text-align: center;"
-              type="number"
-              value="20"
-            />
-            <label for="resultAmount">Page size</label>
+        <div class="col s2"></div>
+        <div class="col s8">
+          <div class="center-align">
+            <a
+              href="https://github.com/techniponi/e669/"
+              style="color: #ffffff"
+            >
+              <img
+                src="ico/favicon-96x96.png"
+                style="text-align: center; height: 64px; -webkit-filter: drop-shadow(0 0px 2px rgba(0, 0, 0, 0.5));"/></a
+            ><br />
+            e669 is created by
+            <a href="https://twitter.com/deltaryz"><b>∆•RYZ</b></a>
           </div>
         </div>
+        <div class="col s2 right"></div>
       </div>
     </footer>
   </body>

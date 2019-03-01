@@ -8,6 +8,9 @@ var lastSearchTags = "";
 var requestURL = ""; // init for later
 var corsForwardURL = "https://cors.dusky.horse/";
 
+// ethereal page navigation or traditional?
+var etherealNavigation = false; // default false for now
+
 // these need to be init'd globally for the modal dialog
 var currentUrl = "";
 var currentId = "";
@@ -23,25 +26,48 @@ grid.masonry({
 });
 
 // since the page just loaded, we need to check for URL parameters
+
+// number of results per page
 if (getQueryVariable("pagesize")) {
   document.getElementById("resultAmount").value = getQueryVariable("pagesize");
 }
 
-if (getQueryVariable("search")) {
-  // we came to this page intending to search something
-  document.getElementById("tags").value = getQueryVariable("search");
-  getSearchQuery();
+// what page to display
+if (getQueryVariable("page")) {
+  currentPage = getQueryVariable("page");
+  updatePageNumber();
 }
 
-function getSearchQuery() {
+// we came to this page intending to search something
+if (getQueryVariable("search")) {
+  var currentSearch = getQueryVariable("search");
+  document.getElementById("tags").value = currentSearch.replace("%20", " "); // de-URLify this for the textbox
+  getSearchQuery(false); // automatically trigger search
+}
+
+function getSearchQuery(userTriggered) {
+  // obtain tag query
+  var tags = document.getElementById("tags").value;
+
+  // if the user searched a new query, reset to page 1
+  if (lastSearchTags !== tags && userTriggered) {
+    if (etherealNavigation) {
+      currentPage = 1;
+      document.getElementById("btnPreviousPage").classList.add("disabled");
+      updatePageNumber();
+    } else {
+      reloadPage(1, tags);
+    }
+  }
+
+  // so we can later pull the current search more easily
+  lastSearchTags = tags;
+
   // scroll back to top
   window.scrollTo(0, 0);
 
   // clear current grid
   grid.masonry("remove", grid.find(".grid-item"));
-
-  // obtain tag query
-  var tags = document.getElementById("tags").value;
 
   // status indicator
   const statusDiv = document.getElementById("status"); // div on page to append results
@@ -67,14 +93,6 @@ function getSearchQuery() {
     // check desired results size
     var resultSize = document.getElementById("resultAmount").value;
     if (resultSize === "") resultSize = 20;
-
-    // if the user searched a new query, reset to page 1
-    if (lastSearchTags !== tags) {
-      currentPage = 1;
-      document.getElementById("btnPreviousPage").classList.add("disabled");
-      updatePageNumber();
-      lastSearchTags = tags;
-    }
 
     // URL to request results from
     requestURL =
@@ -337,26 +355,48 @@ function showDetailsModal(
   });
 }
 
+// load page with new url
+function reloadPage(paramPage, paramSearch, paramPageSize) {
+  if (!paramPage) paramPage = getQueryVariable("page");
+  if (!paramSearch) paramSearch = getQueryVariable("search");
+  if (!paramPageSize) paramPageSize = getQueryVariable("pagesize");
+  window.location =
+    "?page=" +
+    paramPage +
+    "&search=" +
+    paramSearch +
+    "&pagesize=" +
+    paramPageSize;
+}
+
 // advance to next page and automatically reload results
 function pageNext() {
-  verboseLog("User is moving to next page");
-  currentPage++;
-  document.getElementById("btnPreviousPage").classList.remove("disabled");
-  updatePageNumber();
-  getSearchQuery();
+  if (etherealNavigation) {
+    verboseLog("User is moving to next page");
+    currentPage++;
+    document.getElementById("btnPreviousPage").classList.remove("disabled");
+    updatePageNumber();
+    getSearchQuery(true);
+  } else {
+    reloadPage(++currentPage, lastSearchTags);
+  }
 }
 
 // go to previous page and automatically reload results
 function pagePrevious() {
-  verboseLog("User is moving to previous page");
-  if (currentPage > 1) {
-    currentPage--;
-    if (currentPage == 1) {
-      document.getElementById("btnPreviousPage").classList.add("disabled");
+  if (etherealNavigation) {
+    verboseLog("User is moving to previous page");
+    if (currentPage > 1) {
+      currentPage--;
+      if (currentPage == 1) {
+        document.getElementById("btnPreviousPage").classList.add("disabled");
+      }
     }
+    updatePageNumber();
+    getSearchQuery(true);
+  } else {
+    reloadPage(--currentPage, lastSearchTags);
   }
-  updatePageNumber();
-  getSearchQuery();
 }
 
 // allows using URL variables
@@ -393,6 +433,6 @@ function verboseLog(text) {
 document.getElementById("tags").addEventListener("keyup", function(event) {
   event.preventDefault();
   if (event.keyCode === 13) {
-    getSearchQuery();
+    getSearchQuery(true);
   }
 });

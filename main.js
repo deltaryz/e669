@@ -258,7 +258,7 @@ function showDetailsModal(
   artistArray.forEach(function(tag) {
     var currentTag = document.createElement("a");
     currentTag.href =
-      "https://e669.fun/?search=" +
+      "?search=" +
       tag +
       "&pagesize=" +
       document.getElementById("resultAmount").value;
@@ -274,7 +274,7 @@ function showDetailsModal(
     currentTag.addEventListener("click", function(event) {
       event.preventDefault();
       window.location =
-        "https://e669.fun/?search=" +
+        "?search=" +
         tag +
         "&pagesize=" +
         document.getElementById("resultAmount").value;
@@ -289,7 +289,7 @@ function showDetailsModal(
   tagArray.forEach(function(tag) {
     var currentTag = document.createElement("a");
     currentTag.href =
-      "https://e669.fun/?search=" +
+      "?search=" +
       tag +
       "&pagesize=" +
       document.getElementById("resultAmount").value;
@@ -305,7 +305,7 @@ function showDetailsModal(
     currentTag.addEventListener("click", function(event) {
       event.preventDefault();
       window.location =
-        "https://e669.fun/?search=" +
+        "?search=" +
         tag +
         "&pagesize=" +
         document.getElementById("resultAmount").value;

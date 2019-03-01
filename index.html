@@ -178,7 +178,7 @@
       }
 
       /* Shrink navigation margins for narrow screens */
-      @media screen and (max-width: 400px) {
+      @media screen and (max-width: 600px) {
         .right {
           margin-left: 0px;
           margin-right: 0px;
@@ -187,6 +187,10 @@
         .left {
           margin-left: 0px;
           margin-right: 0px;
+        }
+
+        .input-field input[type="search"] {
+          height: 56px !important;
         }
       }
     </style>
@@ -211,6 +215,7 @@
                       id="tags"
                       name="tags"
                       type="search"
+                      placeholder="Search"
                     />
                     <label class="label-icon" for="tags"
                       ><i class="material-icons">search</i></label

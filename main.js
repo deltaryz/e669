@@ -359,7 +359,8 @@ function showDetailsModal(
 function reloadPage(paramPage, paramSearch, paramPageSize) {
   if (!paramPage) paramPage = getQueryVariable("page");
   if (!paramSearch) paramSearch = getQueryVariable("search");
-  if (!paramPageSize) paramPageSize = getQueryVariable("pagesize");
+  if (!paramPageSize)
+    paramPageSize = document.getElementById("resultAmount").value;
   window.location =
     "?page=" +
     paramPage +

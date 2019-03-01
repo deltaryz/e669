@@ -18,7 +18,8 @@ grid.masonry({
   // options
   itemSelector: ".grid-item",
   fitWidth: true,
-  gutter: 10
+  gutter: 10,
+  horizontalOrder: true
 });
 
 // since the page just loaded, we need to check for URL parameters

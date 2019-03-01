@@ -258,7 +258,11 @@ function showDetailsModal(
   if (result["sources"]) {
     result["sources"].forEach(function(source, index) {
       modalMetadata.innerHTML +=
-        "<a href='" + source + "'>" + ++index + "</a>        ";
+        "<a class='btn-small blue' style='margin-right: 10px;' href='" +
+        source +
+        "'>" +
+        ++index +
+        "</a>";
     });
   } else {
     modalMetadata.innerHTML += "(none)";
@@ -274,7 +278,7 @@ function showDetailsModal(
       tag +
       "&pagesize=" +
       document.getElementById("resultAmount").value;
-    currentTag.setAttribute("class", "waves-effect waves-light btn indigo");
+    currentTag.setAttribute("class", "waves-effect waves-light btn blue");
     currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
     currentTag.innerText = tag;
 
@@ -305,8 +309,14 @@ function showDetailsModal(
       tag +
       "&pagesize=" +
       document.getElementById("resultAmount").value;
-    currentTag.setAttribute("class", "waves-effect waves-light btn blue");
-    currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
+    currentTag.setAttribute(
+      "class",
+      "waves-effect waves-light btn-flat grey lighten-2"
+    );
+    currentTag.setAttribute(
+      "style",
+      "margin-right: 5px; margin-bottom: 10px; font-size: 11px !important;"
+    );
     currentTag.innerText = tag;
 
     currentTag.addEventListener("contextmenu", function(event) {

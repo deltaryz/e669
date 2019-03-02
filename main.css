@@ -1,0 +1,91 @@
+.input-field input[type="search"] {
+  height: 64px !important;
+}
+
+.btn-floating {
+  background-color: #666ad1;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  background-color: #152f56;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+.center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 100%;
+}
+
+.grid {
+  margin: 0 auto;
+}
+
+/* clearfix */
+.grid:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.invert-on-edit {
+  color: white;
+}
+
+/* 3 columns by default */
+.grid-item {
+  width: 30vw;
+  float: left;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.webm-shadow {
+  border-radius: 10px;
+  border: 4px solid red;
+}
+
+.swf-shadow {
+  border-radius: 10px;
+  border: 4px solid blue;
+}
+
+.grid-item:hover {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+/* 5 columns for larger screens */
+@media screen and (min-width: 900px) {
+  .grid-item {
+    width: 18vw;
+    float: left;
+    margin-bottom: 20px;
+  }
+}
+
+/* Shrink navigation margins for narrow screens */
+@media screen and (max-width: 600px) {
+  .right {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  .left {
+    margin-left: 0px;
+    margin-right: 0px;
+  }
+
+  .input-field input[type="search"] {
+    height: 56px !important;
+  }
+}

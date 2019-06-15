@@ -6,7 +6,7 @@ var grid = $(".grid"); // fine, i'll use jquery ._.
 // URL query vars
 var lastSearchTags = "";
 var requestURL = ""; // init for later
-var corsForwardURL = "https://cors.dusky.horse/";
+var corsForwardURL = "https://cors.e669.fun/";
 
 // ethereal page navigation or traditional?
 var etherealNavigation = false; // default false for now

@@ -1,3 +1,8 @@
+// for things that have nowhere else to go . . .
+// TODO: create modal dialog for user settings (use one cookie and split the string in the function)
+// TODO: in user settings dialog, add toggle for horizontal order
+// TODO: in user settings dialog, add toggle for verbose logging (off by default)
+
 var verboseOutput = true; // make the terminal vomit everything
 var currentPage = 1;
 
@@ -14,12 +19,6 @@ if (checkCookie("gdpr")) {
     verboseLog("User closes the dialog and thus consents to cookies.");
     setCookie("gdpr", "true", 365);
 }
-
-// for things that have nowhere else to go . . .
-// TODO: create modal dialog for user settings (use one cookie and split the string in the function)
-// TODO: in user settings dialog, add toggle for horizontal order
-// TODO: in user settings dialog, add toggle for verbose logging (off by default)
-
 
 var grid = $(".grid"); // fine, i'll use jquery ._.
 

@@ -463,10 +463,11 @@ function setCookie(cname, cvalue, exdays) {
 
 // delete a browser cookie
 function deleteCookie(cname) {
+    verboseLog("Deleting cookie: " + cname);
     var d = new Date();
-    d.setTime(d.getTime() - (2 * 24 * 60 * 60 * 1000)); // TODO: test and make sure this works
+    d.setTime(d.getTime() - 1);
     var expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    document.cookie = cname + "=" + "get rekt" + ";" + expires + ";path=/";
 }
 
 // get a browser cookie (returns blank if it doesn't exist)

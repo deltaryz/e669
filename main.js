@@ -46,6 +46,20 @@ if (getQueryVariable("search")) {
     getSearchQuery(false); // automatically trigger search
 }
 
+// we also need to check for cookies for a GDPR notice
+verboseLog("Checking if GDPR cookie exists...");
+if (checkCookie("gdpr")) {
+    // cookie does exist!
+    verboseLog("GDPR cookie is present.");
+} else {
+    // cookie does not exist
+    verboseLog("GDPR cookie is NOT present. Displaying cookie notice.");
+    // TODO: update this to be a proper on-page modal and not a janky JS prompt()
+    alert("This website uses cookies to store personal settings. By closing or dismissing this notice, or by continuing to browse this website, you accept the use of cookies.");
+    verboseLog("User closes the dialog and thus consents to cookies.");
+    setCookie("gdpr", "true", 365);
+}
+
 function getSearchQuery(userTriggered) {
     // obtain tag query
     var tags = document.getElementById("tags").value;
@@ -430,6 +444,51 @@ function updatePageNumber() {
     pageNumberElement = document.getElementById(
         "pageNumber"
     ).innerText = currentPage;
+}
+
+// set a browser cookie
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+// delete a browser cookie
+function deleteCookie(cname) {
+    var d = new Date();
+    d.setTime(d.getTime() - (2 * 24 * 60 * 60 * 1000)); // TODO: test and make sure this works
+    var expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+// get a browser cookie
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+// check if a cookie is set
+function checkCookie(cname) {
+    verboseLog("Checking if cookie exists: " + cname);
+    var cookie = getCookie(cname);
+    if (cookie != "") {
+        verboseLog("Cookie exists. \n" + cookie);
+        return true;
+    } else {
+        verboseLog("Cookie does not exist.");
+        return false;
+    }
 }
 
 // Print to console only if verbose output is enabled

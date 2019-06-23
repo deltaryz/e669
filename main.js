@@ -22,6 +22,8 @@ if (checkCookie("gdpr")) {
 
 var grid = $(".grid"); // fine, i'll use jquery ._.
 
+$(".modal").modal(); // make sure all modals are initialized
+
 // URL query vars
 var lastSearchTags = "";
 var requestURL = ""; // init for later
@@ -140,7 +142,6 @@ function getSearchQuery(userTriggered) {
             var results = request.response;
             // TODO: add logic to paginate results
             appendResultsToPage(results); // Add results to page
-            $(".modal").modal(); // make sure all modals are initialized
             statusDiv.innerHTML = "";
         };
 

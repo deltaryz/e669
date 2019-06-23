@@ -446,7 +446,7 @@ function updatePageNumber() {
     ).innerText = currentPage;
 }
 
-// set a browser cookie
+// set/create a browser cookie
 function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -462,7 +462,7 @@ function deleteCookie(cname) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-// get a browser cookie
+// get a browser cookie (returns blank if it doesn't exist)
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -478,7 +478,7 @@ function getCookie(cname) {
     return "";
 }
 
-// check if a cookie is set
+// check if a cookie exists
 function checkCookie(cname) {
     verboseLog("Checking if cookie exists: " + cname);
     var cookie = getCookie(cname);

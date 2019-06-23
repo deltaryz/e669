@@ -1,6 +1,26 @@
 var verboseOutput = true; // make the terminal vomit everything
 var currentPage = 1;
 
+// Before anything else, we need to check for cookies for a GDPR notice
+verboseLog("Checking if GDPR cookie exists...");
+if (checkCookie("gdpr")) {
+    // cookie does exist!
+    verboseLog("GDPR cookie is present.");
+} else {
+    // cookie does not exist
+    verboseLog("GDPR cookie is NOT present. Displaying cookie notice.");
+    // TODO: update this to be a proper on-page modal and not a janky JS prompt()
+    alert("This website uses cookies to store personal settings. By closing or dismissing this notice, or by continuing to browse this website, you accept the use of cookies.");
+    verboseLog("User closes the dialog and thus consents to cookies.");
+    setCookie("gdpr", "true", 365);
+}
+
+// for things that have nowhere else to go . . .
+// TODO: create modal dialog for user settings (use one cookie and split the string in the function)
+// TODO: in user settings dialog, add toggle for horizontal order
+// TODO: in user settings dialog, add toggle for verbose logging (off by default)
+
+
 var grid = $(".grid"); // fine, i'll use jquery ._.
 
 // URL query vars
@@ -19,6 +39,7 @@ var currentExt = "";
 // initialize Masonry
 grid.masonry({
     // options
+    // TODO: grab these from cookies
     itemSelector: ".grid-item",
     fitWidth: true,
     gutter: 10,
@@ -44,20 +65,6 @@ if (getQueryVariable("search")) {
     if (currentSearch === "false") currentSearch = ""; // make sure blank searches don't get stringified to "false"
     document.getElementById("tags").value = currentSearch.replace("%20", " "); // de-URLify this for the textbox
     getSearchQuery(false); // automatically trigger search
-}
-
-// we also need to check for cookies for a GDPR notice
-verboseLog("Checking if GDPR cookie exists...");
-if (checkCookie("gdpr")) {
-    // cookie does exist!
-    verboseLog("GDPR cookie is present.");
-} else {
-    // cookie does not exist
-    verboseLog("GDPR cookie is NOT present. Displaying cookie notice.");
-    // TODO: update this to be a proper on-page modal and not a janky JS prompt()
-    alert("This website uses cookies to store personal settings. By closing or dismissing this notice, or by continuing to browse this website, you accept the use of cookies.");
-    verboseLog("User closes the dialog and thus consents to cookies.");
-    setCookie("gdpr", "true", 365);
 }
 
 function getSearchQuery(userTriggered) {

@@ -209,22 +209,24 @@
 
     <div class="modal" id="settingsModal">
         <div class="modal-content">
-            <h4>User Settings <b><u>(UNFINISHED)</u></b></h4>
+            <h4>User Settings</h4>
             <!-- TODO: format this to look pretty -->
             <p>
-                <label>
-                    <input type="checkbox" class="filled-in" id="horizontalOrder" checked="checked">
-                    <span>Maintain horizontal order of search results</span>
-                </label>
-                <br/>
                 <label>
                     <input type="checkbox" class="filled-in" id="verboseLogging" checked="checked">
                     <span>Verbose console output</span>
                 </label>
+                <br/>
+                <label>
+                    <input type="checkbox" class="filled-in" id="horizontalOrder" checked="checked">
+                    <span>Maintain horizontal order of search results</span>
+                </label>
             </p>
         </div>
         <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">SAVE SETTINGS</a>
+            <a onclick="deleteAllCookies()" class="modal-close waves-effect waves-green btn-flat red-text"><b>DELETE ALL
+                COOKIES</b></a>
+            <a onclick="saveSettings()" class="modal-close waves-effect waves-green btn">SAVE SETTINGS</a>
         </div>
     </div>
 
@@ -314,8 +316,7 @@
         </div>
         <div class="col s2">
             <div class="center-align" style="position: relative;">
-                <button class="btn-floating btn-large waves-effect waves-light blue modal-trigger"
-                        data-target="settingsModal">
+                <button onclick="openSettings()" class="btn-floating waves-effect waves-light blue">
                     <i class=" material-icons">settings</i>
                 </button>
             </div>

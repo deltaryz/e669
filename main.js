@@ -1,5 +1,5 @@
 // for things that have nowhere else to go . . .
-// TODO: create modal dialog for user settings (use one cookie and split the string in the function)
+// TODO: create modal dialog for user settings (check if cookie exists, if it doesn't, write it immediately)
 // TODO: in user settings dialog, add toggle for horizontal order
 // TODO: in user settings dialog, add toggle for verbose logging (off by default)
 
@@ -145,8 +145,7 @@ function getSearchQuery(userTriggered) {
             statusDiv.innerHTML = "";
         };
 
-        // TODO: find way to delay function until two separate requests finish loading (mayhaps do them sequentially?)
-        // TODO: Add logic to splice together derpibooru and e621 results (configurable sort methods?)
+        // TODO: implement dropdown to switch between e621 and derpibooru (and eventually others)
     }
 
     // add all results to page
@@ -491,10 +490,10 @@ function checkCookie(cname) {
     verboseLog("Checking if cookie exists: " + cname);
     var cookie = getCookie(cname);
     if (cookie != "") {
-        verboseLog("Cookie exists. \n" + cookie);
+        verboseLog("Cookie " + cname + " exists. \n" + cookie);
         return true;
     } else {
-        verboseLog("Cookie does not exist.");
+        verboseLog("Cookie " + cname + " does not exist.");
         return false;
     }
 }

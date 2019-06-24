@@ -52,6 +52,7 @@ grid.masonry({
 // number of results per page
 if (getQueryVariable("pagesize")) {
     document.getElementById("resultAmount").value = getQueryVariable("pagesize");
+// TODO: implement a results size cookie setting and initialize the on-page input with set value if the query doesn't include one
 }
 
 // what page to display

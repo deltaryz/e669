@@ -1,3 +1,6 @@
+// TODO: implement color scheme switching (with saving settings)
+// TODO: implement unique reactive default theme that changes based on selected site
+
 var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
 refreshSettings(); // update settings with cookies (this doesn't write any cookies to the browser yet)

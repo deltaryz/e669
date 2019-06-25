@@ -316,8 +316,15 @@ function getSearchQuery(userTriggered) {
                     const fileType = result["original_format"];
                     const fileTags = result["tags"];
                     const fileId = result["id"];
-                    const artistName = ["placeholder", "placeholder2"]; // TODO: parse tags for artists, handle several
                     const fileDescription = result["description"];
+
+                    // get artists from tags
+                    var artistName = [];
+                    fileTags.split(", ").forEach(function (tag) {
+                        if (tag.includes("artist:")) {
+                            artistName.push(tag);
+                        }
+                    });
 
                     verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
 
@@ -470,7 +477,6 @@ function showDetailsModal(
         }
     }
 
-    // TODO: make sure that derpi artist tags are parsed
     var artistArray = artists;
     var modalArtists = document.getElementById("modalArtists");
     modalArtists.innerHTML = "";
@@ -526,7 +532,14 @@ function showDetailsModal(
         modalArtists.appendChild(currentTag);
     });
 
-    var tagArray = tags.split(" ");
+    // format tags correctly
+    var tagArray;
+    if (currentApi == "e621") {
+        tagArray = tags.split(" ");
+    } else if (currentApi == "derpi") {
+        tagArray = tags.split(", ");
+    }
+
     var modalTags = document.getElementById("modalTags");
     modalTags.innerHTML = "";
     tagArray.forEach(function (tag) {

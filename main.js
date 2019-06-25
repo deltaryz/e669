@@ -539,10 +539,10 @@ function openSettings() {
     // set checkboxes based on cookies
     document.getElementById("verboseLogging").checked = settingsVerbose;
     document.getElementById("horizontalOrder").checked = settingsHorizontal;
-    document.getElementById("pageSize").value = settingsPagesize; // TODO: change this to number ticker value
-
+    document.getElementById("pageSize").value = settingsPagesize;
+    
     verboseLog("Current settings should be, assuming nothing went wrong:\n" + settingsVerbose + "\n" + settingsHorizontal + "\n" + settingsPagesize);
-    verboseLog("Actual current settings are:\n" + document.getElementById("verboseLogging").checked + "\n" + document.getElementById("horizontalOrder").checked + "\n" + document.getElementById("pageSize").value); // TODO: change this to number ticker value
+    verboseLog("Actual current settings are:\n" + document.getElementById("verboseLogging").checked + "\n" + document.getElementById("horizontalOrder").checked + "\n" + document.getElementById("pageSize").value);
 
     $("#settingsModal").modal("open");
 }
@@ -552,7 +552,7 @@ function saveSettings() {
     verboseLog("User is saving settings.");
     setCookie("settings-verbose", document.getElementById("verboseLogging").checked, 365);
     setCookie("settings-horizontal", document.getElementById("horizontalOrder").checked, 365);
-    setCookie("settings-pagesize", document.getElementById("pageSize").value, 365); // TODO: change this to number ticker value
+    setCookie("settings-pagesize", document.getElementById("pageSize").value, 365);
 
     // if user changed anything, make sure settings update accordingly
     refreshSettings();

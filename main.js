@@ -190,7 +190,12 @@ function getSearchQuery(userTriggered) {
         // once request loads
         request.onload = function () {
             verboseLog("Request has loaded");
-            var results = request.response;
+            var results;
+            if (currentApi == "derpi") {
+                results = request.response["search"];
+            } else if (currentApi == "e621") {
+                results = request.response;
+            }
             // TODO: add logic to paginate results
             appendResultsToPage(results); // Add results to page
             statusDiv.innerHTML = "";
@@ -202,99 +207,112 @@ function getSearchQuery(userTriggered) {
     // add all results to page
     function appendResultsToPage(resultsArray) {
         resultsArray.forEach(function (result) {
-            // convenience variables
-            const fileUrl = result["file_url"];
-            const fileSampleUrl = result["sample_url"];
-            const fileName = result["artist"] + " - " + result["md5"];
-            const fileType = result["file_ext"];
-            const fileTags = result["tags"];
-            const fileId = result["id"];
-            const artistName = result["artist"];
-            const fileDescription = result["description"];
-            const pageUrl = "https://e621.net/post/show/" + result["id"];
 
-            verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
+            // e621 API
+            if (currentApi == "e621") {
+                // convenience variables
+                const fileUrl = result["file_url"];
+                const fileSampleUrl = result["sample_url"];
+                const fileName = result["artist"] + " - " + result["md5"];
+                const fileType = result["file_ext"];
+                const fileTags = result["tags"];
+                const fileId = result["id"];
+                const artistName = result["artist"];
+                const fileDescription = result["description"];
+                const pageUrl = "https://e621.net/post/show/" + result["id"];
 
-            // check if file is an SWF or WEBM
-            if (fileType === "webm") {
-                // this is a webm // TODO: modal popup for webms
-                var link = document.createElement("a"); // make the image clickable
-                link.href = fileUrl;
-                var image = document.createElement("img");
-                image.classList.add("grid-item", "tooltipped", "webm-shadow"); // make sure it has a tooltip
-                image.setAttribute("data-position", "bottom"); // tooltip at bottom
-                image.setAttribute("data-tooltip", artistName); // tooltip has artist name
-                image.title = fileTags; // mouseover should display tags
-                image.src = fileSampleUrl; // it's a webm so we have to show a preview
-                link.appendChild(image);
+                verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
 
-                $(".grid")
-                    .append(link)
-                    .masonry("appended", link)
-                    .imagesLoaded()
-                    .progress(function () {
-                        $(document).ready(function () {
-                            $(".tooltipped").tooltip();
+                // check if file is an SWF or WEBM
+                if (fileType === "webm") {
+                    // this is a webm // TODO: modal popup for webms
+                    var link = document.createElement("a"); // make the image clickable
+                    link.href = fileUrl;
+                    var image = document.createElement("img");
+                    image.classList.add("grid-item", "tooltipped", "webm-shadow"); // make sure it has a tooltip
+                    image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                    image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                    image.title = fileTags; // mouseover should display tags
+                    image.src = fileSampleUrl; // it's a webm so we have to show a preview
+                    link.appendChild(image);
+
+                    $(".grid")
+                        .append(link)
+                        .masonry("appended", link)
+                        .imagesLoaded()
+                        .progress(function () {
+                            $(document).ready(function () {
+                                $(".tooltipped").tooltip();
+                            });
+                            $(".grid").masonry();
                         });
-                        $(".grid").masonry();
-                    });
-            } else if (fileType === "swf") {
-                // this is an swf // TODO: modal popup for swfs
-                var link = document.createElement("a"); // make the image clickable
-                link.href = fileUrl;
-                var image = document.createElement("img");
-                image.classList.add("grid-item", "tooltipped", "swf-shadow"); // make sure it has a tooltip
-                image.setAttribute("data-position", "bottom"); // tooltip at bottom
-                image.setAttribute("data-tooltip", artistName); // tooltip has artist name
-                image.title = fileTags; // mouseover should display tags
-                image.src = "img/swf-icon.png"; // it's an swf so we have to indicate this
-                link.appendChild(image);
+                } else if (fileType === "swf") {
+                    // this is an swf // TODO: modal popup for swfs
+                    var link = document.createElement("a"); // make the image clickable
+                    link.href = fileUrl;
+                    var image = document.createElement("img");
+                    image.classList.add("grid-item", "tooltipped", "swf-shadow"); // make sure it has a tooltip
+                    image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                    image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                    image.title = fileTags; // mouseover should display tags
+                    image.src = "img/swf-icon.png"; // it's an swf so we have to indicate this
+                    link.appendChild(image);
 
-                $(".grid")
-                    .append(link)
-                    .masonry("appended", link)
-                    .imagesLoaded()
-                    .progress(function () {
-                        $(document).ready(function () {
-                            $(".tooltipped").tooltip();
+                    $(".grid")
+                        .append(link)
+                        .masonry("appended", link)
+                        .imagesLoaded()
+                        .progress(function () {
+                            $(document).ready(function () {
+                                $(".tooltipped").tooltip();
+                            });
+                            $(".grid").masonry();
                         });
-                        $(".grid").masonry();
+                } else {
+                    // this is an image
+                    var link = document.createElement("a"); // make the image clickable
+                    link.href = fileUrl; // clicking it will directly load the image
+                    var image = document.createElement("img");
+                    image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
+                    image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                    image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                    image.title = fileTags; // mouseover should display tags
+                    image.src = fileSampleUrl;
+                    link.appendChild(image);
+                    link.addEventListener("click", function (event) {
+                        showDetailsModal(
+                            fileTags,
+                            fileId,
+                            artistName,
+                            fileType,
+                            fileUrl,
+                            fileDescription,
+                            result
+                        );
+                        event.preventDefault();
                     });
-            } else {
-                // this is an image
-                var link = document.createElement("a"); // make the image clickable
-                link.href = fileUrl; // clicking it will directly load the image
-                var image = document.createElement("img");
-                image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
-                image.setAttribute("data-position", "bottom"); // tooltip at bottom
-                image.setAttribute("data-tooltip", artistName); // tooltip has artist name
-                image.title = fileTags; // mouseover should display tags
-                image.src = fileSampleUrl;
-                link.appendChild(image);
-                link.addEventListener("click", function (event) {
-                    showDetailsModal(
-                        fileTags,
-                        fileId,
-                        artistName,
-                        fileType,
-                        fileUrl,
-                        fileDescription,
-                        result
-                    );
-                    event.preventDefault();
-                });
 
-                // build the grid
-                $(".grid")
-                    .append(link)
-                    .masonry("appended", link)
-                    .imagesLoaded()
-                    .progress(function () {
-                        $(document).ready(function () {
-                            $(".tooltipped").tooltip();
+                    // build the grid
+                    $(".grid")
+                        .append(link)
+                        .masonry("appended", link)
+                        .imagesLoaded()
+                        .progress(function () {
+                            $(document).ready(function () {
+                                $(".tooltipped").tooltip();
+                            });
+                            $(".grid").masonry();
                         });
-                        $(".grid").masonry();
-                    });
+                }
+            } else if (currentApi == "derpi") {
+                // convenience variables
+                const fileUrl = "https:" + result["image"];
+                const fileSampleUrl = "https:" + result["representations"]["thumb"];
+                const fileType = result["original_format"];
+                const fileTags = result["tags"];
+                const fileId = result["id"];
+                const artistName = result["artist"]; // TODO: parse tags for artists, handle several
+                const fileDescription = result["description"];
             }
         });
     }
@@ -313,14 +331,14 @@ function showDetailsModal(
     fileDescription,
     result
 ) {
-    currentUrl = "https://e621.net/post/show/" + fileId;
+    currentUrl = "https://e621.net/post/show/" + fileId; // TODO: adjust this for derpi
     currentId = fileId;
     $("#detailsModal").modal("open");
     document.getElementById("downloadButton").onclick = function () {
         download(currentUrl, "e" + currentId + "." + fileExtension);
     };
     document.getElementById("fullsizeButton").setAttribute("href", fileUrl);
-    document.getElementById("e621Button").setAttribute("href", currentUrl);
+    document.getElementById("e621Button").setAttribute("href", currentUrl); // TODO: adjust this for derpi
     document.getElementById("modalImage").innerHTML =
         "<img style='max-width: 100%' src='" + fileUrl + "' />";
     if (fileDescription != "") {
@@ -350,7 +368,7 @@ function showDetailsModal(
         "<br/>" +
         "Sources: ";
 
-    if (result["sources"]) {
+    if (result["sources"]) { // TODO: adjust this for derpi (only one source)
         result["sources"].forEach(function (source, index) {
             modalMetadata.innerHTML +=
                 "<a class='btn-small blue' style='margin-right: 10px;' href='" +
@@ -363,12 +381,13 @@ function showDetailsModal(
         modalMetadata.innerHTML += "(none)";
     }
 
+    // TODO: make sure that derpi artist tags are parsed
     var artistArray = artists;
     var modalArtists = document.getElementById("modalArtists");
     modalArtists.innerHTML = "";
     artistArray.forEach(function (tag) {
         var currentTag = document.createElement("a");
-        currentTag.href =
+        currentTag.href = // TODO: adjust this for derpi
             "?search=" +
             tag +
             "&pagesize=" +
@@ -384,7 +403,7 @@ function showDetailsModal(
 
         currentTag.addEventListener("click", function (event) {
             event.preventDefault();
-            window.location =
+            window.location = // TODO: adjust this for derpi
                 "?search=" +
                 tag +
                 "&pagesize=" +
@@ -399,7 +418,7 @@ function showDetailsModal(
     modalTags.innerHTML = "";
     tagArray.forEach(function (tag) {
         var currentTag = document.createElement("a");
-        currentTag.href =
+        currentTag.href = // TODO: adjust this for derpi
             "?search=" +
             tag +
             "&pagesize=" +
@@ -423,7 +442,7 @@ function showDetailsModal(
 
         currentTag.addEventListener("click", function (event) {
             event.preventDefault();
-            window.location =
+            window.location = // TODO: adjust this for derpi
                 "?search=" +
                 tag +
                 "&pagesize=" +
@@ -441,7 +460,7 @@ function reloadPage(paramPage, paramSearch, paramPageSize) {
     if (!paramPageSize)
         paramPageSize = document.getElementById("resultAmount").value;
 
-    window.location =
+    window.location = // TODO: adjust this for derpi
         "?page=" +
         paramPage +
         "&search=" +

@@ -337,7 +337,27 @@ function getSearchQuery(userTriggered) {
                     // check if file is an SWF or WEBM
                     if (fileType === "webm") {
                         // this is a webm // TODO: modal popup for webms
+                        // TODO: find a way to preview these inline
+                        var link = document.createElement("a"); // make the image clickable
+                        link.href = fileUrl;
+                        var image = document.createElement("img");
+                        image.classList.add("grid-item", "tooltipped", "webm-shadow"); // make sure it has a tooltip
+                        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                        image.title = fileTags; // mouseover should display tags
+                        image.src = "img/webm-icon.png"; // it's a webm so we have to show a preview
+                        link.appendChild(image);
 
+                        $(".grid")
+                            .append(link)
+                            .masonry("appended", link)
+                            .imagesLoaded()
+                            .progress(function () {
+                                $(document).ready(function () {
+                                    $(".tooltipped").tooltip();
+                                });
+                                $(".grid").masonry();
+                            });
                     } else {
                         // this is an image
                         var link = document.createElement("a"); // make the image clickable

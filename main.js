@@ -3,7 +3,8 @@
 
 var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
-var pageSize = 20; // size of results on page, default 20
+var r18 = false; // allow R18+ search results. default false
+var pageSize = 20; // size of results on page. default 20
 refreshSettings(); // update settings with cookies (this doesn't write any cookies to the browser yet)
 
 var currentPage = 1;
@@ -83,6 +84,16 @@ if (getQueryVariable("search")) {
 function getSearchQuery(userTriggered) {
     // obtain tag query
     var tags = document.getElementById("tags").value;
+
+    // user does not have R18 permissions, add safe tag
+    if (!r18) {
+        verboseLog("User has not enabled R18+ settings, manually enforcing rating:safe tag.");
+        // make sure we aren't redundantly adding more
+        if (!tags.includes("rating:safe")) {
+            tags += "%20rating:safe";
+        }
+        // TODO: adjust auto-safe-query for e6/derpi
+    }
 
     // if the user searched a new query, reset to page 1
     if (lastSearchTags !== tags && userTriggered) {
@@ -525,6 +536,11 @@ function openSettings() {
         setCookie("settings-horizontal", "true", 365);
     }
 
+    if (!checkCookie("settings-r18")) {
+        verboseLog("settings-r18 cookie has not been set, go ahead and write it now");
+        setCookie("settings-r18", "false", 365);
+    }
+
     if (!checkCookie("settings-pagesize")) {
         verboseLog("settings-pagesize cookie has not been set, go ahead and write it now");
         setCookie("settings-pagesize", pageSize, 365);
@@ -534,13 +550,15 @@ function openSettings() {
     // these use JSON.parse to make sure it's correctly evaluated as a boolean
     var settingsVerbose = JSON.parse(getCookie("settings-verbose"));
     var settingsHorizontal = JSON.parse(getCookie("settings-horizontal"));
+    var settingsr18 = JSON.parse(getCookie("settings-r18"));
     var settingsPagesize = parseInt(getCookie("settings-pagesize"));
 
     // set checkboxes based on cookies
     document.getElementById("verboseLogging").checked = settingsVerbose;
     document.getElementById("horizontalOrder").checked = settingsHorizontal;
+    document.getElementById("r18").checked = settingsr18;
     document.getElementById("pageSize").value = settingsPagesize;
-    
+
     verboseLog("Current settings should be, assuming nothing went wrong:\n" + settingsVerbose + "\n" + settingsHorizontal + "\n" + settingsPagesize);
     verboseLog("Actual current settings are:\n" + document.getElementById("verboseLogging").checked + "\n" + document.getElementById("horizontalOrder").checked + "\n" + document.getElementById("pageSize").value);
 
@@ -552,6 +570,7 @@ function saveSettings() {
     verboseLog("User is saving settings.");
     setCookie("settings-verbose", document.getElementById("verboseLogging").checked, 365);
     setCookie("settings-horizontal", document.getElementById("horizontalOrder").checked, 365);
+    setCookie("settings-r18", document.getElementById("r18").checked, 365);
     setCookie("settings-pagesize", document.getElementById("pageSize").value, 365);
 
     // if user changed anything, make sure settings update accordingly
@@ -570,6 +589,9 @@ function refreshSettings() {
     }
     if (checkCookie("settings-horizontal")) {
         horizontalOrder = JSON.parse(getCookie("settings-horizontal"));
+    }
+    if (checkCookie("settings-r18")) {
+        r18 = JSON.parse(getCookie("settings-r18"));
     }
     if (checkCookie("settings-pagesize")) {
         pageSize = parseInt(getCookie("settings-pagesize"));

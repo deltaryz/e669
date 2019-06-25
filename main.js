@@ -7,6 +7,7 @@ var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
 var r18 = false; // allow R18+ search results. default false
 var pageSize = 20; // size of results on page. default 20
+var derpiApiKey = "false"; // derpibooru API key. default false
 var currentApi = "e621"; // current website API to pull from. default e621
 refreshSettings(); // update settings with cookies (this doesn't write any cookies to the browser yet)
 
@@ -178,7 +179,9 @@ function getSearchQuery(userTriggered) {
                 "&page=" +
                 currentPage +
                 "&q=" +
-                tags;
+                tags +
+                "&key=" +
+                derpiApiKey;
         }
 
         // create request
@@ -741,18 +744,25 @@ function openSettings() {
         setCookie("settings-pagesize", pageSize, 365);
     }
 
+    if (!checkCookie("settings-derpiapikey")) {
+        verboseLog("settings-derpiapikey cookie has not been set, go ahead and write it now");
+        setCookie("settings-derpiapikey", "false", 365);
+    }
+
     // checkbox variables
     // these use JSON.parse to make sure it's correctly evaluated as a boolean
     var settingsVerbose = JSON.parse(getCookie("settings-verbose"));
     var settingsHorizontal = JSON.parse(getCookie("settings-horizontal"));
     var settingsr18 = JSON.parse(getCookie("settings-r18"));
     var settingsPagesize = parseInt(getCookie("settings-pagesize"));
+    var settingsDerpiApiKey = getCookie("settings-derpiapikey");
 
     // set checkboxes based on cookies
     document.getElementById("verboseLogging").checked = settingsVerbose;
     document.getElementById("horizontalOrder").checked = settingsHorizontal;
     document.getElementById("r18").checked = settingsr18;
     document.getElementById("pageSize").value = settingsPagesize;
+    document.getElementById("derpiApiKey").value = settingsDerpiApiKey;
 
     verboseLog("Current settings should be, assuming nothing went wrong:\n" + settingsVerbose + "\n" + settingsHorizontal + "\n" + settingsPagesize);
     verboseLog("Actual current settings are:\n" + document.getElementById("verboseLogging").checked + "\n" + document.getElementById("horizontalOrder").checked + "\n" + document.getElementById("pageSize").value);
@@ -777,6 +787,7 @@ function saveSettings() {
     setCookie("settings-horizontal", document.getElementById("horizontalOrder").checked, 365);
     setCookie("settings-r18", document.getElementById("r18").checked, 365);
     setCookie("settings-pagesize", document.getElementById("pageSize").value, 365);
+    setCookie("settings-derpiapikey", document.getElementById("derpiApiKey").value, 365);
 
     // if user changed anything, make sure settings update accordingly
     refreshSettings();
@@ -800,6 +811,9 @@ function refreshSettings() {
     }
     if (checkCookie("settings-pagesize")) {
         pageSize = parseInt(getCookie("settings-pagesize"));
+    }
+    if (checkCookie("settings-derpiapikey")) {
+        derpiApiKey = getCookie("settings-derpiapikey");
     }
 
 }

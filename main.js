@@ -6,6 +6,7 @@ var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
 var r18 = false; // allow R18+ search results. default false
 var pageSize = 20; // size of results on page. default 20
+var currentApi = "e621"; // current website API to pull from. default e621
 refreshSettings(); // update settings with cookies (this doesn't write any cookies to the browser yet)
 
 var currentPage = 1;
@@ -63,6 +64,12 @@ if (getQueryVariable("pagesize")) {
         verboseLog("Cookie exists.");
         pageSize = getCookie("settings-pagesize");
     }
+}
+
+// initialize variable with API setting
+if (getQueryVariable("api")) {
+    currentApi = getQueryVariable("api");
+    verboseLog("API set to " + currentApi + " via URL query variable");
 }
 
 // Make sure the box displays the current value

@@ -1,6 +1,7 @@
 // TODO: implement color scheme switching (with saving settings)
 // TODO: implement unique reactive default theme that changes based on selected site
 
+// global variables for settings
 var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
 var r18 = false; // allow R18+ search results. default false
@@ -144,11 +145,16 @@ function getSearchQuery(userTriggered) {
         requestURL =
             corsForwardURL +
             "e621.net:443/post/index.json?limit=" +
-            resultSize + // TODO: change this to large number (200+) for pagination on our end
+            resultSize + // TODO: paginate on e669->e621 side - 320 max posts per query
             "&page=" +
             currentPage +
             "&tags=" +
             tags;
+        // e621 enforces a hard limit of 320 posts per query.
+        // To circumvent this, we need additional logic (and maybe a cookie?)
+        // to manage the user-facing page separately from the API request page.
+        // Derpibooru requires no such micromanaging as its more versatile search
+        // queries remove the necessity for pagination on e669 like we do for e621.
 
         // TODO: add logic to format derpibooru request
 

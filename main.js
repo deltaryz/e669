@@ -112,7 +112,7 @@ function getSearchQuery(userTriggered) {
         } else if (currentApi == "derpi") {
             // make sure we aren't redundantly adding more
             if (!tags.includes("safe")) {
-                tags += "%20safe";
+                tags += ",safe";
             }
         }
     }

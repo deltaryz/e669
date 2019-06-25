@@ -392,6 +392,8 @@ function showDetailsModal(
         );
         currentTag.innerText = tag;
 
+        // TODO: add plus button to tags that add to search query, only visible on small screens
+
         currentTag.addEventListener("contextmenu", function (event) {
             addTagToSearch(tag);
             event.preventDefault();

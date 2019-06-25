@@ -663,7 +663,11 @@ function getQueryVariable(variable) {
 
 // add a tag to the existing searchbox
 function addTagToSearch(tag) {
-    document.getElementById("tags").value += " " + tag;
+    if (currentApi == "e621") {
+        document.getElementById("tags").value += " " + tag;
+    } else if (currentApi == "derpi") {
+        document.getElementById("tags").value += "," + tag;
+    }
 }
 
 // update the displayed page number

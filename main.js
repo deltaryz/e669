@@ -642,12 +642,6 @@ function verboseLog(text) {
     if (verboseOutput) console.log(text);
 }
 
-// replace all occurrences of a string, not just one
-String.prototype.replaceAll = function (search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-};
-
 // enable enter key functionality on search box
 document.getElementById("tags").addEventListener("keyup", function (event) {
     event.preventDefault();

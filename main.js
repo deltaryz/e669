@@ -3,6 +3,7 @@
 
 var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
+var pageSize = 20; // size of results on page, default 20
 refreshSettings(); // update settings with cookies (this doesn't write any cookies to the browser yet)
 
 var currentPage = 1;
@@ -51,9 +52,19 @@ grid.masonry({
 
 // number of results per page
 if (getQueryVariable("pagesize")) {
-    document.getElementById("resultAmount").value = getQueryVariable("pagesize");
-// TODO: implement a results size cookie setting and initialize the on-page input with set value if the query doesn't include one
+    verboseLog("Query variable exists for page size.");
+    pageSize = getQueryVariable("pagesize");
+} else {
+    // non-destructively load cookie default to populate the box
+    verboseLog("Attempting to load page size from cookie.");
+    if (checkCookie("settings-pagesize")) {
+        verboseLog("Cookie exists.");
+        pageSize = getCookie("settings-pagesize");
+    }
 }
+
+// Make sure the box displays the current value
+document.getElementById("resultAmount").value = pageSize;
 
 // what page to display
 if (getQueryVariable("page")) {
@@ -514,17 +525,24 @@ function openSettings() {
         setCookie("settings-horizontal", "true", 365);
     }
 
+    if (!checkCookie("settings-pagesize")) {
+        verboseLog("settings-pagesize cookie has not been set, go ahead and write it now");
+        setCookie("settings-pagesize", pageSize, 365);
+    }
+
     // checkbox variables
     // these use JSON.parse to make sure it's correctly evaluated as a boolean
     var settingsVerbose = JSON.parse(getCookie("settings-verbose"));
     var settingsHorizontal = JSON.parse(getCookie("settings-horizontal"));
+    var settingsPagesize = parseInt(getCookie("settings-pagesize"));
 
     // set checkboxes based on cookies
     document.getElementById("verboseLogging").checked = settingsVerbose;
     document.getElementById("horizontalOrder").checked = settingsHorizontal;
+    document.getElementById("pageSize").value = settingsPagesize; // TODO: change this to number ticker value
 
-    verboseLog("Current settings should be, assuming nothing went wrong:\n" + settingsVerbose + "\n" + settingsHorizontal);
-    verboseLog("Actual current settings are:\n" + document.getElementById("verboseLogging").checked + "\n" + document.getElementById("horizontalOrder").checked);
+    verboseLog("Current settings should be, assuming nothing went wrong:\n" + settingsVerbose + "\n" + settingsHorizontal + "\n" + settingsPagesize);
+    verboseLog("Actual current settings are:\n" + document.getElementById("verboseLogging").checked + "\n" + document.getElementById("horizontalOrder").checked + "\n" + document.getElementById("pageSize").value); // TODO: change this to number ticker value
 
     $("#settingsModal").modal("open");
 }
@@ -534,6 +552,7 @@ function saveSettings() {
     verboseLog("User is saving settings.");
     setCookie("settings-verbose", document.getElementById("verboseLogging").checked, 365);
     setCookie("settings-horizontal", document.getElementById("horizontalOrder").checked, 365);
+    setCookie("settings-pagesize", document.getElementById("pageSize").value, 365); // TODO: change this to number ticker value
 
     // if user changed anything, make sure settings update accordingly
     refreshSettings();
@@ -552,6 +571,10 @@ function refreshSettings() {
     if (checkCookie("settings-horizontal")) {
         horizontalOrder = JSON.parse(getCookie("settings-horizontal"));
     }
+    if (checkCookie("settings-pagesize")) {
+        pageSize = parseInt(getCookie("settings-pagesize"));
+    }
+
 }
 
 // delete ALL cookies and refresh the page

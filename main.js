@@ -96,11 +96,17 @@ function getSearchQuery(userTriggered) {
     // user does not have R18 permissions, add safe tag
     if (!r18) {
         verboseLog("User has not enabled R18+ settings, manually enforcing rating:safe tag.");
-        // make sure we aren't redundantly adding more
-        if (!tags.includes("rating:safe")) {
-            tags += "%20rating:safe";
+        if (currentApi == "e621") {
+            // make sure we aren't redundantly adding more
+            if (!tags.includes("rating:safe")) {
+                tags += "%20rating:safe";
+            }
+        } else if (currentApi == "derpi") {
+            // make sure we aren't redundantly adding more
+            if (!tags.includes("safe")) {
+                tags += "%20safe";
+            }
         }
-        // TODO: adjust auto-safe-query for e6/derpi
     }
 
     // if the user searched a new query, reset to page 1
@@ -138,8 +144,8 @@ function getSearchQuery(userTriggered) {
         splitTags.length
     );
 
-    // check if there are more than 6 tags
-    if (splitTags.length > 6) {
+    // check if there are more than 6 tags being searched on e621
+    if (splitTags.length > 6 && currentApi == "e621") {
         // let user know this is too many tags
         statusDiv.innerHTML =
             "<b>Your fetishes are getting really specific.</b><br/>7+ tag searches are still a work in progress. For now, keep your searches at 6 tags or less!";
@@ -149,21 +155,30 @@ function getSearchQuery(userTriggered) {
         if (resultSize === "") resultSize = 20;
 
         // URL to request results from
-        requestURL =
-            corsForwardURL +
-            "e621.net:443/post/index.json?limit=" +
-            resultSize + // TODO: paginate on e669->e621 side - 320 max posts per query
-            "&page=" +
-            currentPage +
-            "&tags=" +
-            tags;
-        // e621 enforces a hard limit of 320 posts per query.
-        // To circumvent this, we need additional logic (and maybe a cookie?)
-        // to manage the user-facing page separately from the API request page.
-        // Derpibooru requires no such micromanaging as its more versatile search
-        // queries remove the necessity for pagination on e669 like we do for e621.
-
-        // TODO: add logic to format derpibooru request
+        if (currentApi == "e621") {
+            // e621 enforces a hard limit of 320 posts per query.
+            // To circumvent this, we need additional logic (and maybe a cookie?)
+            // to manage the user-facing page separately from the API request page.
+            // Derpibooru requires no such micromanaging as its more versatile search
+            // queries remove the necessity for pagination on e669 like we do for e621.
+            requestURL =
+                corsForwardURL +
+                "e621.net:443/post/index.json?limit=" +
+                resultSize + // TODO: paginate on e669->e621 side - 320 max posts per query
+                "&page=" +
+                currentPage +
+                "&tags=" +
+                tags;
+        } else if (currentApi == "derpi") {
+            requestURL =
+                corsForwardURL +
+                "derpibooru.org:443/search.json?perpage=" +
+                resultSize +
+                "&page=" +
+                currentPage +
+                "&q=" +
+                tags;
+        }
 
         // create request
         verboseLog("creating request to " + requestURL);
@@ -647,6 +662,7 @@ String.prototype.replaceAll = function (search, replacement) {
     var target = this;
     return target.split(search).join(replacement);
 };
+
 // enable enter key functionality on search box
 document.getElementById("tags").addEventListener("keyup", function (event) {
     event.preventDefault();

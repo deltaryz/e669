@@ -78,7 +78,7 @@ if (getQueryVariable("page")) {
 if (getQueryVariable("search")) {
     var currentSearch = getQueryVariable("search");
     if (currentSearch === "false") currentSearch = ""; // make sure blank searches don't get stringified to "false"
-    document.getElementById("tags").value = currentSearch.replaceAll("%20", " "); // de-URLify this for the textbox
+    document.getElementById("tags").value = currentSearch.split("%20").join(' '); // de-URLify this for the textbox
     getSearchQuery(false); // automatically trigger search
 }
 
@@ -635,11 +635,6 @@ function verboseLog(text) {
     if (verboseOutput) console.log(text);
 }
 
-// replace all occurrences of a string, not just one
-String.prototype.replaceAll = function (search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-};
 // enable enter key functionality on search box
 document.getElementById("tags").addEventListener("keyup", function (event) {
     event.preventDefault();

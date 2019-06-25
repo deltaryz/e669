@@ -1,5 +1,6 @@
 // TODO: implement color scheme switching (with saving settings)
 // TODO: implement unique reactive default theme that changes based on selected site
+// TODO: implement basic bookmarking feature
 
 // global variables for settings
 var verboseOutput = false; // make the terminal vomit everything. default false
@@ -85,7 +86,7 @@ if (getQueryVariable("page")) {
 if (getQueryVariable("search")) {
     var currentSearch = getQueryVariable("search");
     if (currentSearch === "false") currentSearch = ""; // make sure blank searches don't get stringified to "false"
-    document.getElementById("tags").value = currentSearch.replaceAll("%20", " "); // de-URLify this for the textbox
+    document.getElementById("tags").value = currentSearch.split("%20").join(' '); // de-URLify this for the textbox
     getSearchQuery(false); // automatically trigger search
 }
 
@@ -208,113 +209,158 @@ function getSearchQuery(userTriggered) {
     function appendResultsToPage(resultsArray) {
         resultsArray.forEach(function (result) {
 
-            // e621 API
-            if (currentApi == "e621") {
-                // convenience variables
-                const fileUrl = result["file_url"];
-                const fileSampleUrl = result["sample_url"];
-                const fileName = result["artist"] + " - " + result["md5"];
-                const fileType = result["file_ext"];
-                const fileTags = result["tags"];
-                const fileId = result["id"];
-                const artistName = result["artist"];
-                const fileDescription = result["description"];
-                const pageUrl = "https://e621.net/post/show/" + result["id"];
+                // e621 API
+                if (currentApi == "e621") {
+                    // convenience variables
+                    const fileUrl = result["file_url"];
+                    const fileSampleUrl = result["sample_url"];
+                    const fileName = result["artist"] + " - " + result["md5"];
+                    const fileType = result["file_ext"];
+                    const fileTags = result["tags"];
+                    const fileId = result["id"];
+                    const artistName = result["artist"];
+                    const fileDescription = result["description"];
+                    const pageUrl = "https://e621.net/post/show/" + result["id"];
 
-                verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
+                    verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
 
-                // check if file is an SWF or WEBM
-                if (fileType === "webm") {
-                    // this is a webm // TODO: modal popup for webms
-                    var link = document.createElement("a"); // make the image clickable
-                    link.href = fileUrl;
-                    var image = document.createElement("img");
-                    image.classList.add("grid-item", "tooltipped", "webm-shadow"); // make sure it has a tooltip
-                    image.setAttribute("data-position", "bottom"); // tooltip at bottom
-                    image.setAttribute("data-tooltip", artistName); // tooltip has artist name
-                    image.title = fileTags; // mouseover should display tags
-                    image.src = fileSampleUrl; // it's a webm so we have to show a preview
-                    link.appendChild(image);
+                    // check if file is an SWF or WEBM
+                    if (fileType === "webm") {
+                        // this is a webm // TODO: modal popup for webms
+                        var link = document.createElement("a"); // make the image clickable
+                        link.href = fileUrl;
+                        var image = document.createElement("img");
+                        image.classList.add("grid-item", "tooltipped", "webm-shadow"); // make sure it has a tooltip
+                        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                        image.title = fileTags; // mouseover should display tags
+                        image.src = fileSampleUrl; // it's a webm so we have to show a preview
+                        link.appendChild(image);
 
-                    $(".grid")
-                        .append(link)
-                        .masonry("appended", link)
-                        .imagesLoaded()
-                        .progress(function () {
-                            $(document).ready(function () {
-                                $(".tooltipped").tooltip();
+                        $(".grid")
+                            .append(link)
+                            .masonry("appended", link)
+                            .imagesLoaded()
+                            .progress(function () {
+                                $(document).ready(function () {
+                                    $(".tooltipped").tooltip();
+                                });
+                                $(".grid").masonry();
                             });
-                            $(".grid").masonry();
-                        });
-                } else if (fileType === "swf") {
-                    // this is an swf // TODO: modal popup for swfs
-                    var link = document.createElement("a"); // make the image clickable
-                    link.href = fileUrl;
-                    var image = document.createElement("img");
-                    image.classList.add("grid-item", "tooltipped", "swf-shadow"); // make sure it has a tooltip
-                    image.setAttribute("data-position", "bottom"); // tooltip at bottom
-                    image.setAttribute("data-tooltip", artistName); // tooltip has artist name
-                    image.title = fileTags; // mouseover should display tags
-                    image.src = "img/swf-icon.png"; // it's an swf so we have to indicate this
-                    link.appendChild(image);
+                    } else if (fileType === "swf") {
+                        // this is an swf // TODO: modal popup for swfs
+                        var link = document.createElement("a"); // make the image clickable
+                        link.href = fileUrl;
+                        var image = document.createElement("img");
+                        image.classList.add("grid-item", "tooltipped", "swf-shadow"); // make sure it has a tooltip
+                        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                        image.title = fileTags; // mouseover should display tags
+                        image.src = "img/swf-icon.png"; // it's an swf so we have to indicate this
+                        link.appendChild(image);
 
-                    $(".grid")
-                        .append(link)
-                        .masonry("appended", link)
-                        .imagesLoaded()
-                        .progress(function () {
-                            $(document).ready(function () {
-                                $(".tooltipped").tooltip();
+                        $(".grid")
+                            .append(link)
+                            .masonry("appended", link)
+                            .imagesLoaded()
+                            .progress(function () {
+                                $(document).ready(function () {
+                                    $(".tooltipped").tooltip();
+                                });
+                                $(".grid").masonry();
                             });
-                            $(".grid").masonry();
+                    } else {
+                        // this is an image
+                        var link = document.createElement("a"); // make the image clickable
+                        link.href = fileUrl; // clicking it will directly load the image
+                        var image = document.createElement("img");
+                        image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
+                        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                        image.title = fileTags; // mouseover should display tags
+                        image.src = fileSampleUrl;
+                        link.appendChild(image);
+                        link.addEventListener("click", function (event) {
+                            showDetailsModal(
+                                fileTags,
+                                fileId,
+                                artistName,
+                                fileType,
+                                fileUrl,
+                                fileDescription,
+                                result
+                            );
+                            event.preventDefault();
                         });
-                } else {
-                    // this is an image
-                    var link = document.createElement("a"); // make the image clickable
-                    link.href = fileUrl; // clicking it will directly load the image
-                    var image = document.createElement("img");
-                    image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
-                    image.setAttribute("data-position", "bottom"); // tooltip at bottom
-                    image.setAttribute("data-tooltip", artistName); // tooltip has artist name
-                    image.title = fileTags; // mouseover should display tags
-                    image.src = fileSampleUrl;
-                    link.appendChild(image);
-                    link.addEventListener("click", function (event) {
-                        showDetailsModal(
-                            fileTags,
-                            fileId,
-                            artistName,
-                            fileType,
-                            fileUrl,
-                            fileDescription,
-                            result
-                        );
-                        event.preventDefault();
-                    });
 
-                    // build the grid
-                    $(".grid")
-                        .append(link)
-                        .masonry("appended", link)
-                        .imagesLoaded()
-                        .progress(function () {
-                            $(document).ready(function () {
-                                $(".tooltipped").tooltip();
+                        // build the grid
+                        $(".grid")
+                            .append(link)
+                            .masonry("appended", link)
+                            .imagesLoaded()
+                            .progress(function () {
+                                $(document).ready(function () {
+                                    $(".tooltipped").tooltip();
+                                });
+                                $(".grid").masonry();
                             });
-                            $(".grid").masonry();
+                    }
+                } else if (currentApi == "derpi") {
+                    // convenience variables
+                    const fileUrl = "https:" + result["image"];
+                    const fileSampleUrl = "https:" + result["representations"]["thumb"];
+                    const fileName = result["id"];
+                    const fileType = result["original_format"];
+                    const fileTags = result["tags"];
+                    const fileId = result["id"];
+                    const artistName = ["placeholder", "placeholder2"]; // TODO: parse tags for artists, handle several
+                    const fileDescription = result["description"];
+
+                    verboseLog("Appending image:\n" + fileUrl + "\n" + fileName);
+
+                    // check if file is an SWF or WEBM
+                    if (fileType === "webm") {
+                        // this is a webm // TODO: modal popup for webms
+
+                    } else {
+                        // this is an image
+                        var link = document.createElement("a"); // make the image clickable
+                        //link.href = fileUrl; // clicking it will directly load the image
+                        var image = document.createElement("img");
+                        image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
+                        image.setAttribute("data-position", "bottom"); // tooltip at bottom
+                        image.setAttribute("data-tooltip", artistName); // tooltip has artist name
+                        image.title = fileTags; // mouseover should display tags
+                        image.src = fileSampleUrl;
+                        link.appendChild(image);
+                        link.addEventListener("click", function (event) {
+                            showDetailsModal(
+                                fileTags,
+                                fileId,
+                                artistName,
+                                fileType,
+                                fileUrl,
+                                fileDescription,
+                                result
+                            );
+                            event.preventDefault();
                         });
+
+                        // build the grid
+                        $(".grid")
+                            .append(link)
+                            .masonry("appended", link)
+                            .imagesLoaded()
+                            .progress(function () {
+                                $(document).ready(function () {
+                                    $(".tooltipped").tooltip();
+                                });
+                                $(".grid").masonry();
+                            });
+                    }
                 }
-            } else if (currentApi == "derpi") {
-                // convenience variables
-                const fileUrl = "https:" + result["image"];
-                const fileSampleUrl = "https:" + result["representations"]["thumb"];
-                const fileType = result["original_format"];
-                const fileTags = result["tags"];
-                const fileId = result["id"];
-                const artistName = result["artist"]; // TODO: parse tags for artists, handle several
-                const fileDescription = result["description"];
             }
-        });
+        );
     }
 }
 
@@ -331,16 +377,27 @@ function showDetailsModal(
     fileDescription,
     result
 ) {
-    currentUrl = "https://e621.net/post/show/" + fileId; // TODO: adjust this for derpi
+    if (currentApi == "e621") {
+        currentUrl = "https://e621.net/post/show/" + fileId;
+    } else if (currentApi == "derpi") {
+        currentUrl = "https://derpibooru.org/" + fileId;
+    }
     currentId = fileId;
     $("#detailsModal").modal("open");
     document.getElementById("downloadButton").onclick = function () {
         download(currentUrl, "e" + currentId + "." + fileExtension);
     };
     document.getElementById("fullsizeButton").setAttribute("href", fileUrl);
-    document.getElementById("e621Button").setAttribute("href", currentUrl); // TODO: adjust this for derpi
-    document.getElementById("modalImage").innerHTML =
-        "<img style='max-width: 100%' src='" + fileUrl + "' />";
+    document.getElementById("e621Button").setAttribute("href", currentUrl);
+    // make sure button reflects the correct site
+    if (currentApi == "e621") {
+        verboseLog("Current site is e621, changing button to 'E621'");
+        document.getElementById("e621Button").innerText = "E621";
+    } else if (currentApi == "derpi") {
+        verboseLog("Current site is derpibooru, changing button to 'DERPIBOORU'");
+        document.getElementById("e621Button").innerText = "DERPIBOORU";
+    }
+    document.getElementById("modalImage").innerHTML = "<img style='max-width: 100%' src='" + fileUrl + "' />";
     if (fileDescription != "") {
         document
             .getElementById("modalDesc")
@@ -354,31 +411,60 @@ function showDetailsModal(
         document.getElementById("modalDesc").innerHTML = fileDescription;
     }
     var modalMetadata = document.getElementById("modalMetadata");
-    modalMetadata.innerHTML =
-        "Dimensions: " +
-        result["width"] +
-        "x" +
-        result["height"] +
-        "<br />" +
-        "MD5: " +
-        result["md5"] +
-        "<br/>" +
-        "Rating: " +
-        result["rating"] +
-        "<br/>" +
-        "Sources: ";
+    if (currentApi == "e621") {
+        modalMetadata.innerHTML =
+            "Dimensions: " +
+            result["width"] +
+            "x" +
+            result["height"] +
+            "<br />" +
+            "MD5: " +
+            result["md5"] +
+            "<br/>" +
+            "Rating: " +
+            result["rating"] +
+            "<br/>" +
+            "Sources: ";
 
-    if (result["sources"]) { // TODO: adjust this for derpi (only one source)
-        result["sources"].forEach(function (source, index) {
+        // if the image has sources, list them
+        if (result["sources"]) {
+            result["sources"].forEach(function (source, index) {
+                modalMetadata.innerHTML +=
+                    "<a class='btn-small blue' style='margin-right: 10px;' href='" +
+                    source +
+                    "'>" +
+                    ++index +
+                    "</a>";
+            });
+        } else {
+            modalMetadata.innerHTML += "(none)";
+        }
+    } else if (currentApi == "derpi") {
+        modalMetadata.innerHTML =
+            "Dimensions: " +
+            result["width"] +
+            "x" +
+            result["height"] +
+            "<br />" +
+            "sha512: " +
+            result["orig_sha512_hash"] +
+            "<br/>" +
+            "Score: " +
+            result["score"] +
+            "<br/>" +
+            "Sources: ";
+
+        // if the image has a source, display it
+        if (result["source_url"]) {
             modalMetadata.innerHTML +=
                 "<a class='btn-small blue' style='margin-right: 10px;' href='" +
-                source +
+                result["source_url"] +
                 "'>" +
-                ++index +
+                "1" +
                 "</a>";
-        });
-    } else {
-        modalMetadata.innerHTML += "(none)";
+        } else {
+            modalMetadata.innerHTML += "(none)";
+        }
     }
 
     // TODO: make sure that derpi artist tags are parsed
@@ -387,11 +473,23 @@ function showDetailsModal(
     modalArtists.innerHTML = "";
     artistArray.forEach(function (tag) {
         var currentTag = document.createElement("a");
-        currentTag.href = // TODO: adjust this for derpi
-            "?search=" +
-            tag +
-            "&pagesize=" +
-            document.getElementById("resultAmount").value;
+
+        if (currentApi == "e621") {
+            currentTag.href =
+                "?search=" +
+                tag +
+                "&api=e621" +
+                "&pagesize=" +
+                document.getElementById("resultAmount").value;
+        } else if (currentApi == "derpi") {
+            currentTag.href =
+                "?search=" +
+                tag +
+                "&api=derpi" +
+                "&pagesize=" +
+                document.getElementById("resultAmount").value;
+        }
+
         currentTag.setAttribute("class", "waves-effect waves-light btn blue");
         currentTag.setAttribute("style", "margin-right: 5px; margin-bottom: 5px;");
         currentTag.innerText = tag;
@@ -403,11 +501,23 @@ function showDetailsModal(
 
         currentTag.addEventListener("click", function (event) {
             event.preventDefault();
-            window.location = // TODO: adjust this for derpi
-                "?search=" +
-                tag +
-                "&pagesize=" +
-                document.getElementById("resultAmount").value;
+
+            if (currentApi == "e621") {
+                window.location =
+                    "?search=" +
+                    tag +
+                    "&api=e621" +
+                    "&pagesize=" +
+                    document.getElementById("resultAmount").value;
+            } else if (currentApi == "derpi") {
+                window.location =
+                    "?search=" +
+                    tag +
+                    "&api=derpi" +
+                    "&pagesize=" +
+                    document.getElementById("resultAmount").value;
+            }
+
             return false;
         });
         modalArtists.appendChild(currentTag);
@@ -418,11 +528,23 @@ function showDetailsModal(
     modalTags.innerHTML = "";
     tagArray.forEach(function (tag) {
         var currentTag = document.createElement("a");
-        currentTag.href = // TODO: adjust this for derpi
-            "?search=" +
-            tag +
-            "&pagesize=" +
-            document.getElementById("resultAmount").value;
+
+        if (currentApi == "e621") {
+            currentTag.href =
+                "?search=" +
+                tag +
+                "&api=e621" +
+                "&pagesize=" +
+                document.getElementById("resultAmount").value;
+        } else if (currentApi == "derpi") {
+            currentTag.href =
+                "?search=" +
+                tag +
+                "&api=derpi" +
+                "&pagesize=" +
+                document.getElementById("resultAmount").value;
+        }
+
         currentTag.setAttribute(
             "class",
             "waves-effect waves-light btn-flat grey lighten-2"
@@ -442,11 +564,22 @@ function showDetailsModal(
 
         currentTag.addEventListener("click", function (event) {
             event.preventDefault();
-            window.location = // TODO: adjust this for derpi
-                "?search=" +
-                tag +
-                "&pagesize=" +
-                document.getElementById("resultAmount").value;
+
+            if (currentApi == "e621") {
+                window.location =
+                    "?search=" +
+                    tag +
+                    "&api=e621" +
+                    "&pagesize=" +
+                    document.getElementById("resultAmount").value;
+            } else if (currentApi == "derpi") {
+                window.location =
+                    "?search=" +
+                    tag +
+                    "&api=derpi" +
+                    "&pagesize=" +
+                    document.getElementById("resultAmount").value;
+            }
             return false;
         });
         modalTags.appendChild(currentTag);
@@ -460,13 +593,26 @@ function reloadPage(paramPage, paramSearch, paramPageSize) {
     if (!paramPageSize)
         paramPageSize = document.getElementById("resultAmount").value;
 
-    window.location = // TODO: adjust this for derpi
-        "?page=" +
-        paramPage +
-        "&search=" +
-        paramSearch +
-        "&pagesize=" +
-        paramPageSize;
+    if (currentApi == "e621") {
+        window.location =
+            "?page=" +
+            paramPage +
+            "&api=e621" +
+            "&search=" +
+            paramSearch +
+            "&pagesize=" +
+            paramPageSize;
+    } else if (currentApi == "derpi") {
+        window.location =
+            "?page=" +
+            paramPage +
+            "&api=derpi" +
+            "&search=" +
+            paramSearch +
+            "&pagesize=" +
+            paramPageSize;
+    }
+
 }
 
 // advance to next page and automatically reload results
@@ -675,12 +821,6 @@ function deleteAllCookies() {
 function verboseLog(text) {
     if (verboseOutput) console.log(text);
 }
-
-// replace all occurrences of a string, not just one
-String.prototype.replaceAll = function (search, replacement) {
-    var target = this;
-    return target.split(search).join(replacement);
-};
 
 // enable enter key functionality on search box
 document.getElementById("tags").addEventListener("keyup", function (event) {

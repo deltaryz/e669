@@ -29,7 +29,9 @@ if (checkCookie("gdpr")) {
 
 var grid = $(".grid"); // fine, i'll use jquery ._.
 
-$(".modal").modal(); // make sure all modals are initialized
+// make sure all modals and dropdowns are initialized
+$(".modal").modal();
+$('.dropdown-trigger').dropdown({"constrainWidth": false, "container": document.getElementById("main")});
 
 // URL query vars
 var lastSearchTags = "";
@@ -70,7 +72,11 @@ if (getQueryVariable("pagesize")) {
 
 // initialize variable with API setting
 if (getQueryVariable("api")) {
-    currentApi = getQueryVariable("api");
+    if (getQueryVariable("api") == "e621") {
+        setApiE621();
+    } else if (getQueryVariable("api") == "derpi") {
+        setApiDerpi();
+    }
     verboseLog("API set to " + currentApi + " via URL query variable");
 }
 
@@ -688,6 +694,18 @@ function updatePageNumber() {
     pageNumberElement = document.getElementById(
         "pageNumber"
     ).innerText = currentPage;
+}
+
+// set site to e621
+function setApiE621() {
+    currentApi = "e621";
+    document.getElementById("apiDropdownImage").setAttribute("src", "img/e621-icon.png")
+}
+
+// set site to derpibooru
+function setApiDerpi() {
+    currentApi = "derpi";
+    document.getElementById("apiDropdownImage").setAttribute("src", "img/derpi-icon.png")
 }
 
 // set/create a browser cookie

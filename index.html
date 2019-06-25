@@ -127,9 +127,17 @@
                                         type="search"
                                         placeholder="Search"
                                 />
-                                <label class="label-icon" for="tags"
-                                ><i class="material-icons">search</i></label
-                                >
+                                <label for="tags">
+                                    <a class="dropdown-trigger" href="#" data-target="apiDropdown">
+                                        <img id="apiDropdownImage" src="img/e621-icon.png" height="50px"
+                                             style="position: relative; top: 30px; filter: drop-shadow(1px 1px black)">
+                                    </a>
+
+                                    <ul id="apiDropdown" class="dropdown-content">
+                                        <li><a href="#!" onclick="setApiE621()">e621</a></li>
+                                        <li><a href="#!" onclick="setApiDerpi()">Derpibooru</a></li>
+                                    </ul>
+                                </label>
                                 <!-- TODO: change this to an e621 icon with a dropdown select, derpibooru as other option -->
                             </div>
                             <div class="col s2 hide-on-med-and-down">
@@ -196,7 +204,7 @@
     </div>
 </header>
 
-<main>
+<main id="main">
     <br/><br/>
 
     <br/>

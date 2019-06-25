@@ -574,6 +574,16 @@ function openSettings() {
 // Reads selected checkboxes on settings modal and writes the cookies with the selected values.
 function saveSettings() {
     verboseLog("User is saving settings.");
+
+    // make sure applicable values are valid settings
+    if (document.getElementById("pageSize").value < 0) {
+        verboseLog("User tried to set pageSize too low. Constraining to 0.");
+        document.getElementById("pageSize").value = 0;
+    } else if (document.getElementById("pageSize").value > 320) {
+        verboseLog("User tried to set pageSize too high. Constraining to 320.");
+        document.getElementById("pageSize").value = 320;
+    }
+
     setCookie("settings-verbose", document.getElementById("verboseLogging").checked, 365);
     setCookie("settings-horizontal", document.getElementById("horizontalOrder").checked, 365);
     setCookie("settings-r18", document.getElementById("r18").checked, 365);

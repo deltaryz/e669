@@ -101,6 +101,12 @@ function getSearchQuery(userTriggered) {
     // obtain tag query
     var tags = document.getElementById("tags").value;
 
+    // no blank tags on derpi
+    if (tags == "" && currentApi == "derpi") {
+        document.getElementById("tags").value = "*";
+        tags = "*";
+    }
+
     // user does not have R18 permissions, add safe tag
     if (!r18) {
         verboseLog("User has not enabled R18+ settings, manually enforcing rating:safe tag.");

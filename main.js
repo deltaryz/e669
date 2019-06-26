@@ -95,6 +95,7 @@ if (getQueryVariable("search")) {
     if (currentSearch === "false") currentSearch = ""; // make sure blank searches don't get stringified to "false"
     document.getElementById("tags").value = currentSearch.split("%20").join(' '); // de-URLify this for the textbox
     getSearchQuery(false); // automatically trigger search
+    document.title = "e669 • " + currentPage + " • " + document.getElementById("tags").value; // set tab title to include search query
 }
 
 function getSearchQuery(userTriggered) {

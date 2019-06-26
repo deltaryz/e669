@@ -317,7 +317,7 @@ function getSearchQuery(userTriggered) {
                 } else if (currentApi == "derpi") {
                     // convenience variables
                     const fileUrl = "https:" + result["image"];
-                    const fileSampleUrl = "https:" + result["representations"]["thumb"];
+                    const fileSampleUrl = "https:" + result["representations"]["medium"];
                     const fileName = result["id"];
                     const fileType = result["original_format"];
                     const fileTags = result["tags"];
@@ -361,7 +361,7 @@ function getSearchQuery(userTriggered) {
                     } else {
                         // this is an image
                         var link = document.createElement("a"); // make the image clickable
-                        //link.href = fileUrl; // clicking it will directly load the image
+                        link.href = fileUrl; // clicking it will directly load the image
                         var image = document.createElement("img");
                         image.classList.add("grid-item", "tooltipped"); // make sure it has a tooltip
                         image.setAttribute("data-position", "bottom"); // tooltip at bottom

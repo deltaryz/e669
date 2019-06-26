@@ -317,7 +317,13 @@ function getSearchQuery(userTriggered) {
                 } else if (currentApi == "derpi") {
                     // convenience variables
                     const fileUrl = "https:" + result["image"];
-                    const fileSampleUrl = "https:" + result["representations"]["medium"];
+
+                    var fileSampleUrl;
+                    if (result["aspect_ratio"] <= 0.5) { // really tall images need a different thumbnail
+                        fileSampleUrl = "https:" + result["representations"]["tall"];
+                    } else {
+                        fileSampleUrl = "https:" + result["representations"]["medium"];
+                    }
                     const fileName = result["id"];
                     const fileType = result["original_format"];
                     const fileTags = result["tags"];

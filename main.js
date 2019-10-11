@@ -417,6 +417,12 @@ function getSearchQuery(userTriggered) {
 // GENERAL HELPER FUNCTIONS
 */
 
+function searchPool(poolLink) {
+    verboseLog("Searching for pool...");
+    document.getElementById("tags").value = poolLink.replace("/pool/show/", "pool:");
+    getSearchQuery(true);
+};
+
 function showDetailsModal(
     tags,
     fileId,
@@ -490,28 +496,39 @@ function showDetailsModal(
         }
 
         // check if image is part of a pool
+        verboseLog("Checking for pool data in source webpage...");
         $.ajax({
             url: corsForwardURL + currentUrl.replace("https://", ""), success: function (data) {
+                verboseLog("Source webpage successfully loaded");
                 let originalPage = $($.parseHTML(data));
                 let statusBox = $(originalPage.find(".sidebar")).find("div.status-notice");  // this jquery is a fucking nightmare holy shit
-                let poolLink = $(statusBox).find("a");
+                if (!statusBox) {
+                    verboseLog("No status box found");
+                } else {
+                    verboseLog("Status box found! Adding pool info...");
+                }
+                let poolLink = $(statusBox).find("a").first();
+                modalMetadata.innerHTML += "<script>"
                 modalMetadata.innerHTML +=
                     "<br/>" +
-                    "Pool: <a href='" +
-                    "https://e621.net" + poolLink.attr("href") +
-                    "'>" +
-                    poolLink.html() +
+                    "Pool: <a style='cursor: pointer;' id='poolTitle' onclick='searchPool(\"" +
+                    poolLink.attr("href") +
+                    "\")' " +
+                    ">" +
+                    poolLink.text() +
                     "</a>" +
                     "<br/>";
 
+
                 // check for next/previous links
                 $(statusBox).find("a").each(function (index) {
+                    verboseLog("Link found inside status box!");
                     let innerText = $(this).text();
                     let innerUrl = "https://e621.net" + $(this).attr("href");
-                    console.log(innerUrl);
 
                     if (innerText.includes("Previous")) {
                         // previous link exists
+                        verboseLog("Link identified as previous!");
                         modalMetadata.innerHTML +=
                             "<a href='" +
                             innerUrl +
@@ -520,6 +537,7 @@ function showDetailsModal(
                     }
 
                     if (innerText.includes("Next")) {
+                        verboseLog("Link identified as next!");
                         // next link exists
                         modalMetadata.innerHTML +=
                             "<a href='" +

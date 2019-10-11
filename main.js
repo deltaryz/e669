@@ -443,8 +443,8 @@ function showDetailsModal(
         verboseLog("Current site is e621, changing button to 'E621'");
         document.getElementById("e621Button").innerText = "E621";
     } else if (currentApi == "derpi") {
-        verboseLog("Current site is derpibooru, changing button to 'DERPIBOORU'");
-        document.getElementById("e621Button").innerText = "DERPIBOORU";
+        verboseLog("Current site is derpibooru, changing button to 'DERPI'");
+        document.getElementById("e621Button").innerText = "DERPI";
     }
     document.getElementById("modalImage").innerHTML = "<img style='max-width: 100%' src='" + fileUrl + "' />";
     if (fileDescription != "") {

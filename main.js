@@ -217,8 +217,6 @@ function getSearchQuery(userTriggered) {
             appendResultsToPage(results); // Add results to page
             statusDiv.innerHTML = "";
         };
-
-        // TODO: implement dropdown to switch between e621 and derpibooru (and eventually others)
     }
 
     // add all results to page

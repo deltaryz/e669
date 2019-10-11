@@ -488,6 +488,48 @@ function showDetailsModal(
         } else {
             modalMetadata.innerHTML += "(none)";
         }
+
+        // check if image is part of a pool
+        $.ajax({
+            url: corsForwardURL + currentUrl.replace("https://", ""), success: function (data) {
+                let originalPage = $($.parseHTML(data));
+                let statusBox = $(originalPage.find(".sidebar")).find("div.status-notice");  // this jquery is a fucking nightmare holy shit
+                let poolLink = $(statusBox).find("a");
+                modalMetadata.innerHTML +=
+                    "<br/>" +
+                    "Pool: <a href='" +
+                    "https://e621.net" + poolLink.attr("href") +
+                    "'>" +
+                    poolLink.html() +
+                    "</a>" +
+                    "<br/>";
+
+                // check for next/previous links
+                $(statusBox).find("a").each(function (index) {
+                    let innerText = $(this).text();
+                    let innerUrl = "https://e621.net" + $(this).attr("href");
+                    console.log(innerUrl);
+
+                    if (innerText.includes("Previous")) {
+                        // previous link exists
+                        modalMetadata.innerHTML +=
+                            "<a href='" +
+                            innerUrl +
+                            "'><< Previous</a>" +
+                            " | ";
+                    }
+
+                    if (innerText.includes("Next")) {
+                        // next link exists
+                        modalMetadata.innerHTML +=
+                            "<a href='" +
+                            innerUrl +
+                            "'>Next >></a>";
+                    }
+                })
+            }
+        });
+
     } else if (currentApi == "derpi") {
         modalMetadata.innerHTML =
             "Dimensions: " +

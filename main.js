@@ -7,7 +7,7 @@ var verboseOutput = false; // make the terminal vomit everything. default false
 var horizontalOrder = true; // maintain horizontal order of search results. default true
 var r18 = false; // allow R18+ search results. default false
 var pageSize = 20; // size of results on page. default 20
-var derpiApiKey = "false"; // derpibooru API key. default false
+var derpiApiKey = "Paste your API key here"; // derpibooru API key. default false
 var currentApi = "e621"; // current website API to pull from. default e621
 refreshSettings(); // update settings with cookies (this doesn't write any cookies to the browser yet)
 

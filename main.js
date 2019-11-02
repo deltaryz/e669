@@ -872,7 +872,7 @@ function openSettings() {
 
     if (!checkCookie("settings-derpiapikey")) {
         verboseLog("settings-derpiapikey cookie has not been set, go ahead and write it now");
-        setCookie("settings-derpiapikey", "false", 365);
+        setCookie("settings-derpiapikey", "Paste API Key Here", 365);
     }
 
     // checkbox variables
